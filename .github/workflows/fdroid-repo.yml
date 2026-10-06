@@ -59,8 +59,6 @@ jobs:
 
           Path("work").mkdir(parents=True, exist_ok=True)
           Path("work/keystore.p12").write_bytes(base64.b64decode(data["keystoreBase64"]))
-          Path("work/store-password.txt").write_text(data["storePassword"], encoding="utf-8")
-          Path("work/key-password.txt").write_text(data["keyPassword"], encoding="utf-8")
           PY
 
           TAG="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName -q .tagName)"
@@ -70,7 +68,7 @@ jobs:
           rm -rf work/download
           mkdir -p work/download
 
-          gh release download "$TAG"             --repo "$GITHUB_REPOSITORY"             --pattern "*.apk"             --dir work/download
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.apk" --dir work/download
 
           apk_count="$(find work/download -maxdepth 1 -type f -name '*.apk' | wc -l)"
           if [ "$apk_count" -ne 1 ]; then
@@ -92,9 +90,10 @@ jobs:
 
           python3 - <<'PY'
           import json
+          import os
           from pathlib import Path
 
-          data = json.loads(__import__("os").environ["FDROID_REPO_SECRET"])
+          data = json.loads(os.environ["FDROID_REPO_SECRET"])
           cfg = Path("work/fdroid/config.yml")
           text = cfg.read_text(encoding="utf-8")
           text += "\nkeystorepass: " + data["storePassword"] + "\n"
@@ -145,8 +144,6 @@ jobs:
           fdroid update --verbose
 
       - name: Publish fdroid-repo branch
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
@@ -157,9 +154,10 @@ jobs:
 
           git switch --orphan fdroid-repo
           git rm -rf . || true
-          cp -R publish/repo .
-          mkdir -p metadata
-          cp -R publish/metadata/. metadata/
+
+          mkdir -p fdroid/repo fdroid/metadata
+          cp -R publish/repo/. fdroid/repo/
+          cp -R publish/metadata/. fdroid/metadata/
 
           cat > README.md <<'EOF'
           # Tickets F-Droid Repository
