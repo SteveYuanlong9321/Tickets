@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0a10">
+  <meta name="description" content="Tickets · 我的设备，我的票">
+  <title>Tickets · 我的设备，我的票</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Tickets 首页">Tickets</a>
+      <span class="version-pill">7.0.0</span>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">TICKETS</div>
+      <h1>我的设备，<span>我的票</span></h1>
+      <p class="hero-copy">
+        把票据留在自己的设备里。需要传给另一台设备时，扫码或碰一碰即可继续。
+      </p>
+
+      <div class="hero-ticket-wrap" aria-label="电子票根示意">
+        <article class="ticket-stub">
+          <div class="ticket-main">
+            <div class="ticket-topline">
+              <span class="ticket-type">电子票根</span>
+              <span class="ticket-status">READY</span>
+            </div>
+
+            <h2>周末演出</h2>
+
+            <div class="ticket-route">
+              <div>
+                <span>时间</span>
+                <strong>19:30</strong>
+              </div>
+              <div>
+                <span>座位</span>
+                <strong>A-18</strong>
+              </div>
+              <div>
+                <span>入口</span>
+                <strong>Gate 3</strong>
+              </div>
+            </div>
+
+            <div class="ticket-divider"><span></span></div>
+
+            <div class="ticket-footer">
+              <span>Tickets</span>
+              <span>LOCAL</span>
+            </div>
+          </div>
+
+          <div class="ticket-edge" aria-hidden="true"></div>
+        </article>
+      </div>
+
+      <div class="actions">
+        <a class="primary-button" href="./ticket.html?t=DEMO-001&amp;sig=demo">
+          <span>扫码收票</span>
+          <span class="button-arrow">↗</span>
+        </a>
+        <button class="secondary-button" id="show-transfer-info" type="button">
+          碰票说明
+        </button>
+      </div>
+
+      <div class="transfer-note" id="transfer-note" hidden>
+        <div class="note-title">碰票是什么？</div>
+        <p>
+          Tickets 的设备间传票体验可以使用 NFC、二维码等方式完成。
+          这个网页只负责展示和接收入口，不会在浏览器里模拟 HCE、NFC 或真实票据传输。
+        </p>
+        <p class="note-small">真实校验与传输逻辑由 App / 后续 Worker 负责。</p>
+      </div>
+    </section>
+
+    <section class="feature-strip" aria-label="产品特点">
+      <div>
+        <span class="feature-kicker">LOCAL</span>
+        <strong>票据留在设备</strong>
+        <p>以本地数据管理为核心。</p>
+      </div>
+      <div>
+        <span class="feature-kicker">SHARE</span>
+        <strong>需要时再传</strong>
+        <p>扫码或碰一碰，把票交给另一台设备。</p>
+      </div>
+      <div>
+        <span class="feature-kicker">OPEN</span>
+        <strong>开源路线</strong>
+        <p>项目源码、发布版本和后续 F-Droid 计划都会集中在这里。</p>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>Tickets · 7.0.0</span>
+      <a href="https://github.com/SteveYuanlong9321/Tickets-App" rel="noopener">GitHub</a>
+    </footer>
+  </main>
+
+  <script>
+    const infoButton = document.getElementById("show-transfer-info");
+    const note = document.getElementById("transfer-note");
+
+    infoButton.addEventListener("click", () => {
+      note.hidden = !note.hidden;
+      infoButton.setAttribute("aria-expanded", String(!note.hidden));
+    });
+  </script>
+</body>
+</html>
