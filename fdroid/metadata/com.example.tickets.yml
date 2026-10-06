@@ -1,0 +1,16 @@
+Name: Tickets
+Summary: 电子票据管理与设备间传票
+Description: |
+  Tickets 是一款 Android 电子票据管理应用。
+
+  用于本地管理车票、机票、演出和门票等电子凭证，并支持设备之间传票。
+  当前发布版本保持完整功能，包括用户可选择的设备间传输连接方式以及实时通知功能。
+
+  官方项目：
+  https://github.com/SteveYuanlong9321/Tickets-App
+WebSite: https://steveyuanlong9321.github.io/Tickets-App/
+SourceCode: https://github.com/SteveYuanlong9321/Tickets-App
+IssueTracker: https://github.com/SteveYuanlong9321/Tickets-App/issues
+AuthorName: SteveYuanlong9321
+Categories:
+  - Travel & Local
