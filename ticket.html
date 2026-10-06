@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0a10">
+  <meta name="description" content="Tickets · 接收票据">
+  <title>接收票据 · Tickets</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page-shell ticket-page">
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Tickets 首页">Tickets</a>
+      <span class="version-pill">7.0.0</span>
+    </header>
+
+    <section class="receive-panel">
+      <div class="receive-icon" aria-hidden="true">
+        <span></span>
+      </div>
+
+      <div class="eyebrow">TICKET TRANSFER</div>
+      <h1>这张票<br><span>正在等你接收</span></h1>
+      <p class="hero-copy">
+        确认后，Tickets 会继续处理这张票的接收流程。
+      </p>
+
+      <div class="receive-ticket">
+        <div class="receive-line">
+          <span>Ticket ID</span>
+          <strong id="ticket-id">—</strong>
+        </div>
+        <div class="receive-line">
+          <span>Signature</span>
+          <strong id="ticket-signature">—</strong>
+        </div>
+      </div>
+
+      <button class="primary-button full-button" id="confirm-button" type="button">
+        确认接收
+        <span class="button-arrow">→</span>
+      </button>
+
+      <a class="text-link" href="./index.html">返回 Tickets</a>
+      <p class="note-small centered">
+        此页面目前为静态接收入口。后续会在这里对接 Worker 校验 sig。
+      </p>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const ticketId = params.get("t") || "未提供";
+    const signature = params.get("sig") || "未提供";
+
+    document.getElementById("ticket-id").textContent = ticketId;
+    document.getElementById("ticket-signature").textContent = signature;
+
+    const toast = document.getElementById("toast");
+    const confirmButton = document.getElementById("confirm-button");
+
+    confirmButton.addEventListener("click", () => {
+      // TODO: 此处后续对接 Worker 校验 sig，并执行真实票据接收。
+      toast.textContent = "演示接收成功 · 等待 App / Worker 接入";
+      toast.classList.add("show");
+
+      window.clearTimeout(window.__ticketsToastTimer);
+      window.__ticketsToastTimer = window.setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2800);
+    });
+  </script>
+</body>
+</html>
