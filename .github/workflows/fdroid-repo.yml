@@ -52,7 +52,7 @@ jobs:
           from pathlib import Path
 
           data = json.loads(os.environ["FDROID_REPO_SECRET"])
-          required = ("keystoreBase64", "storePassword", "keyPassword")
+          required = ("keystoreBase64", "storePassword")
           missing = [k for k in required if not data.get(k)]
           if missing:
               raise SystemExit("Missing fields in FDROID_REPO_SECRET: " + ", ".join(missing))
@@ -97,7 +97,7 @@ jobs:
           cfg = Path("work/fdroid/config.yml")
           text = cfg.read_text(encoding="utf-8")
           text += "\nkeystorepass: " + data["storePassword"] + "\n"
-          text += "keypass: " + data["keyPassword"] + "\n"
+          text += "keypass: " + data["storePassword"] + "\n"
           text += 'keydname: "CN=Tickets F-Droid Repo, O=Tickets, C=US"\n'
           cfg.write_text(text, encoding="utf-8")
           PY
