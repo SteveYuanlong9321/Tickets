@@ -1,0 +1,10 @@
+repo_url: https://raw.githubusercontent.com/SteveYuanlong9321/Tickets-App/fdroid-repo/fdroid/repo
+repo_name: Tickets
+repo_description: Tickets 官方 F-Droid 仓库
+archive_older: 0
+keystore: keystore.p12
+repo_keyalias: repokey
+
+keystorepass: gDP^*iI2hnQEb#XzP*$t%tUXm%-eylu8
+keypass: gDP^*iI2hnQEb#XzP*$t%tUXm%-eylu8
+keydname: "CN=Tickets F-Droid Repo, O=Tickets, C=US"
