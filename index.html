@@ -19,7 +19,7 @@
       <div class="eyebrow">TICKETS</div>
       <h1>我的设备，<span>我的票</span></h1>
       <p class="hero-copy">
-        把票据留在自己的设备里。需要传给另一台设备时，扫码或碰一碰即可继续。
+        把票据留在自己的设备里。需要接收一张票时，使用 App 扫描分享入口即可继续。
       </p>
 
       <div class="hero-ticket-wrap" aria-label="电子票根示意">
@@ -64,18 +64,10 @@
           <span>扫码收票</span>
           <span class="button-arrow">↗</span>
         </a>
-        <button class="secondary-button" id="show-transfer-info" type="button">
-          碰票说明
-        </button>
-      </div>
 
-      <div class="transfer-note" id="transfer-note" hidden>
-        <div class="note-title">碰票是什么？</div>
-        <p>
-          Tickets 的设备间传票体验可以使用 NFC、二维码等方式完成。
-          这个网页只负责展示和接收入口，不会在浏览器里模拟 HCE、NFC 或真实票据传输。
-        </p>
-        <p class="note-small">真实校验与传输逻辑由 App / 后续 Worker 负责。</p>
+        <a class="secondary-button" href="https://github.com/SteveYuanlong9321/Tickets-App" rel="noopener">
+          查看项目
+        </a>
       </div>
     </section>
 
@@ -83,12 +75,12 @@
       <div>
         <span class="feature-kicker">LOCAL</span>
         <strong>票据留在设备</strong>
-        <p>以本地数据管理为核心。</p>
+        <p>以本地数据管理为核心，票据默认保存在设备本地。</p>
       </div>
       <div>
-        <span class="feature-kicker">SHARE</span>
-        <strong>需要时再传</strong>
-        <p>扫码或碰一碰，把票交给另一台设备。</p>
+        <span class="feature-kicker">RECEIVE</span>
+        <strong>扫码接收</strong>
+        <p>通过 Tickets 的分享入口打开接收页面，再交由 App 继续处理。</p>
       </div>
       <div>
         <span class="feature-kicker">OPEN</span>
@@ -102,15 +94,5 @@
       <a href="https://github.com/SteveYuanlong9321/Tickets-App" rel="noopener">GitHub</a>
     </footer>
   </main>
-
-  <script>
-    const infoButton = document.getElementById("show-transfer-info");
-    const note = document.getElementById("transfer-note");
-
-    infoButton.addEventListener("click", () => {
-      note.hidden = !note.hidden;
-      infoButton.setAttribute("aria-expanded", String(!note.hidden));
-    });
-  </script>
 </body>
 </html>
