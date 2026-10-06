@@ -80,7 +80,7 @@ jobs:
           cp "$(find work/download -maxdepth 1 -type f -name '*.apk' | head -n1)" work/fdroid/repo/
 
           cat > work/fdroid/config.yml <<'EOF'
-          repo_url: https://raw.githubusercontent.com/SteveYuanlong9321/Tickets-App/fdroid-repo/fdroid/repo
+          repo_url: https://steveyuanlong9321.github.io/Tickets-App/fdroid/repo/
           repo_name: Tickets
           repo_description: Tickets 官方 F-Droid 仓库
           archive_older: 0
@@ -143,36 +143,28 @@ jobs:
         run: |
           fdroid update --verbose
 
-      - name: Publish fdroid-repo branch
+      - name: Publish F-Droid repository to GitHub Pages
         run: |
           set -euo pipefail
 
-          rm -rf publish
-          mkdir -p publish
-          cp -R work/fdroid/repo publish/repo
-          cp -R work/fdroid/metadata publish/metadata
-
-          git switch --orphan fdroid-repo
-          git rm -rf . || true
-
           mkdir -p fdroid/repo fdroid/metadata
-          cp -R publish/repo/. fdroid/repo/
-          cp -R publish/metadata/. fdroid/metadata/
+          rm -rf fdroid/repo/*
+          rm -rf fdroid/metadata/*
 
-          cat > README.md <<'EOF'
-          # Tickets F-Droid Repository
-
-          This branch is generated automatically for the Tickets F-Droid repository.
-
-          Repository URL:
-          https://raw.githubusercontent.com/SteveYuanlong9321/Tickets-App/fdroid-repo/fdroid/repo?fingerprint=643CF127A884E116260C0CFE40B8FA0AC3B1CE2C1AE0685F354EF34E503BAD8A
-          EOF
+          cp -R work/fdroid/repo/. fdroid/repo/
+          cp -R work/fdroid/metadata/. fdroid/metadata/
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
+
+          git add fdroid/repo fdroid/metadata
+          if git diff --cached --quiet; then
+            echo "No F-Droid repository changes to publish."
+            exit 0
+          fi
+
           git commit -m "Update Tickets F-Droid repository"
-          git push origin fdroid-repo --force
+          git push origin HEAD:main
 
       - name: Clean signing material
         if: always()
