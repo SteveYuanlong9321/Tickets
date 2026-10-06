@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0a10">
+  <meta name="description" content="Tickets 隐私政策">
+  <title>Tickets · 隐私政策</title>
+  <link rel="stylesheet" href="./style.css?v=7.0.0-privacy-01">
+  <style>
+    .privacy-page { width: min(820px, 100%); margin: 0 auto; padding: 54px 0 80px; }
+    .privacy-page h1 { margin: 0 0 12px; font-size: clamp(38px, 7vw, 60px); letter-spacing: -0.055em; }
+    .privacy-page .updated { color: #8d8698; font-size: 13px; margin-bottom: 42px; }
+    .privacy-section { margin-top: 32px; }
+    .privacy-section h2 { margin: 0 0 12px; font-size: 20px; }
+    .privacy-section p, .privacy-section li { color: #b4aebe; font-size: 15px; line-height: 1.8; }
+    .privacy-section ul { margin: 10px 0 0 20px; padding: 0; }
+    .privacy-back { display: inline-flex; margin-bottom: 34px; color: #aaa1b6; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <main class="site">
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Tickets 首页">Tickets</a>
+      <span class="version">7.0.0</span>
+    </header>
+
+    <section class="privacy-page">
+      <a class="privacy-back" href="./index.html">← 返回 Tickets</a>
+
+      <h1>隐私政策</h1>
+      <div class="updated">最后更新：2026 年 10 月 6 日</div>
+
+      <div class="privacy-section">
+        <h2>1. 概述</h2>
+        <p>
+          Tickets 是一款以本地设备为核心的 Android 电子票据管理应用。
+          我们尊重用户隐私，并尽量让票据内容保留在用户自己的设备中。
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>2. 本地票据数据</h2>
+        <p>
+          用户在 Tickets 中创建、保存和管理的票据信息主要存储在用户自己的 Android 设备上。
+          这些内容可能包括票据字段、二维码或条形码内容、票据图片及应用设置。
+          我们不会以 Tickets 自己的服务器为目的收集、出售或出租用户的票据内容。
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>3. OCR 与条码识别</h2>
+        <p>
+          Tickets 可使用设备上的文字识别和条码识别功能帮助用户从票据图片中提取信息。
+          相关识别功能以设备端处理为主，不需要为了 Tickets 的正常识别功能把票据图片上传到我们的服务器。
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>4. 设备间传票</h2>
+        <p>
+          Tickets 支持在用户明确操作后将票据发送到另一台设备。
+          用户可以选择数据传输通道。NFC 或二维码主要用于建立分享会话；实际票据数据通过用户选择的设备间连接方式传输。
+        </p>
+        <p>
+          传输只在用户主动发起并确认后进行。Tickets 不会在后台自动向附近设备发送票据。
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>5. 推送通知（FCM）</h2>
+        <p>
+          Tickets 的 FCM 提醒功能属于可选功能。开启后，应用可能获取 Firebase Cloud Messaging
+          registration token，并将该设备的推送注册信息同步到用于发送通知的服务。
+          Google Firebase 可能按照其自身的隐私政策处理相关技术数据。
+        </p>
+        <p>
+          关闭 FCM 提醒后，应用不会继续主动使用 FCM 发送该功能的推送。
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>6. 第三方服务</h2>
+        <p>
+          某些功能可能依赖第三方技术或服务，例如 Google Firebase Cloud Messaging、
+          Google Play services 相关组件以及 GitHub 等服务。
+          这些第三方服务可能按照各自的隐私政策处理其运行所必需的技术信息。
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>7. 数据共享与出售</h2>
+        <p>
+          Tickets 不以出售用户个人信息或票据数据为目的，也不会将用户票据数据出售给广告商。
+          当用户主动使用设备间传票或开启需要第三方服务的功能时，完成该功能所必需的信息可能在相应设备或第三方服务之间传输。
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>8. 儿童隐私</h2>
+        <p>
+          Tickets 不以儿童为目标用户，也不会主动要求用户提交姓名、住址等身份信息。
+          如监护人认为儿童向我们提供了不应提供的信息，可以通过项目的 GitHub Issues 联系开发者。
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>9. 联系方式</h2>
+        <p>
+          如对本隐私政策或 Tickets 的隐私实践有疑问，请通过项目 GitHub Issues 联系：
+          <a href="https://github.com/SteveYuanlong9321/Tickets-App/issues" target="_blank" rel="noopener noreferrer">Tickets GitHub Issues</a>
+        </p>
+      </div>
+
+      <div class="privacy-section">
+        <h2>10. 政策更新</h2>
+        <p>
+          如果 Tickets 的数据处理方式发生重大变化，我们会更新本页面并调整最后更新时间。
+        </p>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>Tickets · 7.0.0</span>
+      <a href="https://github.com/SteveYuanlong9321/Tickets-App" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </footer>
+  </main>
+</body>
+</html>
