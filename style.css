@@ -142,9 +142,18 @@ a {
   line-height: 1.75;
 }
 
-.release-link {
-  width: min(330px, 100%);
+.download-links {
+  width: 100%;
   margin-top: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.release-link {
+  width: min(330px, calc(50% - 9px));
   display: inline-flex;
   line-height: 0;
   border-radius: 17px;
@@ -226,8 +235,12 @@ a {
     font-size: 14px;
   }
 
+  .download-links {
+    margin-top: 30px;
+    gap: 12px;
+  }
+
   .release-link {
     width: min(306px, 100%);
-    margin-top: 30px;
   }
 }
