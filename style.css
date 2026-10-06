@@ -592,67 +592,32 @@ button {
   }
 }
 
-/* GitHub 下载徽章：参考 App Store / Google Play 的官方商店徽章比例与黑色视觉。 */
-.download-badge {
+/* GitHub Releases 下载徽章：使用最终图像，保持商店徽章比例。 */
+.release-badge {
   display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 248px;
-  min-height: 64px;
-  padding: 8px 18px 8px 14px;
-  border: 2px solid rgba(255, 255, 255, 0.62);
+  width: min(248px, 100%);
+  line-height: 0;
   border-radius: 17px;
-  background: #050505;
-  color: #ffffff;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  transition: transform 160ms ease, filter 160ms ease;
 }
 
-.download-badge:hover {
+.release-badge:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
+  filter: brightness(1.06);
 }
 
-.download-badge:active {
+.release-badge:active {
   transform: translateY(0);
 }
 
-.download-badge-icon {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-}
-
-.download-badge-copy {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1;
-}
-
-.download-badge-copy small {
-  margin-bottom: 5px;
-  color: rgba(255, 255, 255, 0.92);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.11em;
-}
-
-.download-badge-copy strong {
-  color: #ffffff;
-  font-size: 22px;
-  font-weight: 650;
-  letter-spacing: -0.035em;
-  white-space: nowrap;
+.release-badge-image {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 @media (max-width: 500px) {
-  .download-badge {
-    width: 100%;
-    min-width: 0;
-    min-height: 60px;
-    justify-content: center;
+  .release-badge {
+    width: min(100%, 300px);
   }
 }
