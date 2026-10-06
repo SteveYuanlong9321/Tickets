@@ -1,0 +1,182 @@
+name: Publish Tickets F-Droid Repo
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+  schedule:
+    - cron: "17 4 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tickets-fdroid-repo
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and publish F-Droid repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install F-Droid server tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apksigner pipx
+          pipx install fdroidserver
+          pipx ensurepath
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Prepare repository
+        env:
+          FDROID_REPO_SECRET: ${{ secrets.FDROID_REPO_SECRET }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${FDROID_REPO_SECRET}" ]; then
+            echo "FDROID_REPO_SECRET is not configured."
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          import base64
+          import json
+          import os
+          from pathlib import Path
+
+          data = json.loads(os.environ["FDROID_REPO_SECRET"])
+          required = ("keystoreBase64", "storePassword", "keyPassword")
+          missing = [k for k in required if not data.get(k)]
+          if missing:
+              raise SystemExit("Missing fields in FDROID_REPO_SECRET: " + ", ".join(missing))
+
+          Path("work").mkdir(parents=True, exist_ok=True)
+          Path("work/keystore.p12").write_bytes(base64.b64decode(data["keystoreBase64"]))
+          Path("work/store-password.txt").write_text(data["storePassword"], encoding="utf-8")
+          Path("work/key-password.txt").write_text(data["keyPassword"], encoding="utf-8")
+          PY
+
+          TAG="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName -q .tagName)"
+          echo "Using latest release: $TAG"
+
+          mkdir -p work/fdroid/repo work/fdroid/metadata
+          rm -rf work/download
+          mkdir -p work/download
+
+          gh release download "$TAG"             --repo "$GITHUB_REPOSITORY"             --pattern "*.apk"             --dir work/download
+
+          apk_count="$(find work/download -maxdepth 1 -type f -name '*.apk' | wc -l)"
+          if [ "$apk_count" -ne 1 ]; then
+            echo "Expected exactly one APK in the latest release, found $apk_count."
+            find work/download -maxdepth 1 -type f -print
+            exit 1
+          fi
+
+          cp "$(find work/download -maxdepth 1 -type f -name '*.apk' | head -n1)" work/fdroid/repo/
+
+          cat > work/fdroid/config.yml <<'EOF'
+          repo_url: https://raw.githubusercontent.com/SteveYuanlong9321/Tickets-App/fdroid-repo/fdroid/repo?fingerprint=643CF127A884E116260C0CFE40B8FA0AC3B1CE2C1AE0685F354EF34E503BAD8A
+          repo_name: Tickets
+          repo_description: Tickets 官方 F-Droid 仓库
+          archive_older: 0
+          keystore: keystore.p12
+          repo_keyalias: repokey
+          EOF
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(__import__("os").environ["FDROID_REPO_SECRET"])
+          cfg = Path("work/fdroid/config.yml")
+          text = cfg.read_text(encoding="utf-8")
+          text += "\nkeystorepass: " + data["storePassword"] + "\n"
+          text += "keypass: " + data["keyPassword"] + "\n"
+          text += 'keydname: "CN=Tickets F-Droid Repo, O=Tickets, C=US"\n'
+          cfg.write_text(text, encoding="utf-8")
+          PY
+
+          cp work/keystore.p12 work/fdroid/keystore.p12
+          chmod 600 work/fdroid/config.yml work/fdroid/keystore.p12
+
+      - name: Generate repository index
+        working-directory: work/fdroid
+        run: |
+          fdroid update --create-metadata --verbose
+
+      - name: Add Tickets metadata
+        run: |
+          set -euo pipefail
+          META="$(find work/fdroid/metadata -maxdepth 1 -type f -name '*.yml' | head -n1)"
+          if [ -z "$META" ]; then
+            echo "No metadata file was created by fdroid update."
+            exit 1
+          fi
+
+          cat > "$META" <<'EOF'
+          Name: Tickets
+          Summary: 电子票据管理与设备间传票
+          Description: |
+            Tickets 是一款 Android 电子票据管理应用。
+
+            用于本地管理车票、机票、演出和门票等电子凭证，并支持设备之间传票。
+            当前发布版本保持完整功能，包括用户可选择的设备间传输连接方式以及实时通知功能。
+
+            官方项目：
+            https://github.com/SteveYuanlong9321/Tickets-App
+          WebSite: https://steveyuanlong9321.github.io/Tickets-App/
+          SourceCode: https://github.com/SteveYuanlong9321/Tickets-App
+          IssueTracker: https://github.com/SteveYuanlong9321/Tickets-App/issues
+          AuthorName: SteveYuanlong9321
+          Categories:
+            - Travel & Local
+          EOF
+
+      - name: Regenerate repository index after metadata update
+        working-directory: work/fdroid
+        run: |
+          fdroid update --verbose
+
+      - name: Publish fdroid-repo branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          rm -rf publish
+          mkdir -p publish
+          cp -R work/fdroid/repo publish/repo
+          cp -R work/fdroid/metadata publish/metadata
+
+          git switch --orphan fdroid-repo
+          git rm -rf . || true
+          cp -R publish/repo .
+          mkdir -p metadata
+          cp -R publish/metadata/. metadata/
+
+          cat > README.md <<'EOF'
+          # Tickets F-Droid Repository
+
+          This branch is generated automatically for the Tickets F-Droid repository.
+
+          Repository URL:
+          https://raw.githubusercontent.com/SteveYuanlong9321/Tickets-App/fdroid-repo/fdroid/repo?fingerprint=643CF127A884E116260C0CFE40B8FA0AC3B1CE2C1AE0685F354EF34E503BAD8A
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update Tickets F-Droid repository"
+          git push origin fdroid-repo --force
+
+      - name: Clean signing material
+        if: always()
+        run: |
+          rm -rf work
