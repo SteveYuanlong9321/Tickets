@@ -80,7 +80,7 @@ jobs:
           cp "$(find work/download -maxdepth 1 -type f -name '*.apk' | head -n1)" work/fdroid/repo/
 
           cat > work/fdroid/config.yml <<'EOF'
-          repo_url: https://steveyuanlong9321.github.io/Tickets-App/fdroid/repo/
+          repo_url: https://steveyuanlong9321.github.io/Tickets-App/fdroid/repo
           repo_name: Tickets
           repo_description: Tickets 官方 F-Droid 仓库
           archive_older: 0
