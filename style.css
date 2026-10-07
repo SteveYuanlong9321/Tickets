@@ -67,7 +67,7 @@ a {
 
 .hero {
   position: relative;
-  width: min(1040px, 100%);
+  width: min(760px, 100%);
   margin: auto;
   padding: 7vh 0 9vh;
   display: flex;
@@ -143,7 +143,7 @@ a {
 }
 
 .download-links {
-  width: 100%;
+  width: min(1278px, calc(100vw - 34px));
   margin-top: 34px;
   display: flex;
   align-items: center;
@@ -153,7 +153,7 @@ a {
 }
 
 .release-link {
-  width: 240px;
+  width: 306px;
   display: inline-flex;
   line-height: 0;
   border-radius: 17px;
