@@ -28,7 +28,91 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check whether F-Droid repository needs updating
+        id: update_check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+
+          raw = subprocess.check_output(
+              [
+                  "gh",
+                  "api",
+                  "--paginate",
+                  "--slurp",
+                  f"repos/{repo}/releases?per_page=100",
+              ],
+              text=True,
+          )
+
+          pages = json.loads(raw)
+          releases = [release for page in pages for release in page]
+          releases = [
+              release
+              for release in releases
+              if not release.get("draft") and not release.get("prerelease")
+          ]
+
+          releases_with_apk = [
+              release
+              for release in releases
+              if any(
+                  asset.get("name", "").lower().endswith(".apk")
+                  for asset in release.get("assets", [])
+              )
+          ]
+
+          if not releases_with_apk:
+              raise SystemExit("No published GitHub release with an APK was found.")
+
+          latest_tag = releases_with_apk[0]["tag_name"]
+          expected_count = len(releases_with_apk)
+
+          index_path = Path("fdroid/repo/index-v2.json")
+          indexed_versions = []
+          if index_path.exists():
+              try:
+                  index_data = json.loads(index_path.read_text(encoding="utf-8"))
+                  package = index_data.get("packages", {}).get("com.example.tickets", {})
+                  indexed_versions = [
+                      version_info.get("manifest", {}).get("versionName")
+                      for version_info in package.get("versions", {}).values()
+                      if version_info.get("manifest", {}).get("versionName")
+                  ]
+              except (OSError, json.JSONDecodeError, AttributeError, TypeError):
+                  indexed_versions = []
+
+          latest_version = latest_tag[1:] if latest_tag.startswith("v") else latest_tag
+          current_count = len(indexed_versions)
+          latest_present = latest_version in indexed_versions
+
+          update_needed = (
+              current_count != expected_count
+              or not latest_present
+              or not index_path.exists()
+          )
+
+          print(f"Published releases with APK: {expected_count}")
+          print(f"Indexed F-Droid versions: {current_count}")
+          print(f"Latest GitHub release: {latest_tag}")
+          print(f"Latest version present in F-Droid index: {latest_present}")
+          print(f"F-Droid update needed: {update_needed}")
+
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
+              env_file.write(f"FDROID_UPDATE_NEEDED={'true' if update_needed else 'false'}\n")
+          PY
+
       - name: Install F-Droid server tools
+        if: env.FDROID_UPDATE_NEEDED == 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y apksigner pipx
@@ -37,6 +121,7 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       - name: Prepare repository
+        if: env.FDROID_UPDATE_NEEDED == 'true'
         env:
           FDROID_REPO_SECRET: ${{ secrets.FDROID_REPO_SECRET }}
           GH_TOKEN: ${{ github.token }}
@@ -115,8 +200,7 @@ jobs:
           done
 
           echo "Collected $total_apks APK(s) from published GitHub releases."
-
-                    cp assets/tickets-app-icon.png work/fdroid/tickets-app-icon.png
+          cp assets/tickets-app-icon.png work/fdroid/tickets-app-icon.png
 
           cat > work/fdroid/config.yml <<'EOF'
           repo_url: https://steveyuanlong9321.github.io/Tickets/fdroid/repo
@@ -146,11 +230,13 @@ jobs:
           chmod 600 work/fdroid/config.yml work/fdroid/keystore.p12
 
       - name: Generate repository index
+        if: env.FDROID_UPDATE_NEEDED == 'true'
         working-directory: work/fdroid
         run: |
           fdroid update --create-metadata --verbose
 
       - name: Add Tickets metadata
+        if: env.FDROID_UPDATE_NEEDED == 'true'
         run: |
           set -euo pipefail
           META="$(find work/fdroid/metadata -maxdepth 1 -type f -name '*.yml' | head -n1)"
@@ -179,11 +265,13 @@ jobs:
           EOF
 
       - name: Regenerate repository index after metadata update
+        if: env.FDROID_UPDATE_NEEDED == 'true'
         working-directory: work/fdroid
         run: |
           fdroid update --verbose
 
       - name: Publish F-Droid repository to GitHub Pages
+        if: env.FDROID_UPDATE_NEEDED == 'true'
         run: |
           set -euo pipefail
 
