@@ -88,16 +88,16 @@ OCR 和条码识别用于帮助用户从票据图片中提取内容；设备间�
 ## 官方资源
 
 官方网站：  
-https://steveyuanlong9321.github.io/Tickets-App/
+https://steveyuanlong9321.github.io/Tickets/
 
 GitHub：  
-https://github.com/SteveYuanlong9321/Tickets-App
+https://github.com/SteveYuanlong9321/Tickets
 
 GitHub Releases：  
-https://github.com/SteveYuanlong9321/Tickets-App/releases
+https://github.com/SteveYuanlong9321/Tickets/releases
 
 隐私政策：  
-https://steveyuanlong9321.github.io/Tickets-App/privacy.html
+https://steveyuanlong9321.github.io/Tickets/privacy.html
 
 ---
 
