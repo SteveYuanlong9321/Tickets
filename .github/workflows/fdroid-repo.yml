@@ -80,7 +80,7 @@ jobs:
           cp "$(find work/download -maxdepth 1 -type f -name '*.apk' | head -n1)" work/fdroid/repo/
 
           cat > work/fdroid/config.yml <<'EOF'
-          repo_url: https://steveyuanlong9321.github.io/Tickets-App/fdroid/repo
+          repo_url: https://steveyuanlong9321.github.io/Tickets/fdroid/repo
           repo_name: Tickets
           repo_description: Tickets 官方 F-Droid 仓库
           archive_older: 0
@@ -129,10 +129,10 @@ jobs:
             当前发布版本保持完整功能，包括用户可选择的设备间传输连接方式以及实时通知功能。
 
             官方项目：
-            https://github.com/SteveYuanlong9321/Tickets-App
-          WebSite: https://steveyuanlong9321.github.io/Tickets-App/
-          SourceCode: https://github.com/SteveYuanlong9321/Tickets-App
-          IssueTracker: https://github.com/SteveYuanlong9321/Tickets-App/issues
+            https://github.com/SteveYuanlong9321/Tickets
+          WebSite: https://steveyuanlong9321.github.io/Tickets/
+          SourceCode: https://github.com/SteveYuanlong9321/Tickets
+          IssueTracker: https://github.com/SteveYuanlong9321/Tickets/issues
           AuthorName: SteveYuanlong9321
           Categories:
             - Travel & Local
