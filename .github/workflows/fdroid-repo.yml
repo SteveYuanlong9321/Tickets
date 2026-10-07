@@ -200,6 +200,9 @@ jobs:
           done
 
           echo "Collected $total_apks APK(s) from published GitHub releases."
+
+          mkdir -p work/fdroid/repo/com.example.tickets/en-US
+          cp assets/tickets-app-icon.png work/fdroid/repo/com.example.tickets/en-US/icon.png
           cp assets/tickets-app-icon.png work/fdroid/tickets-app-icon.png
 
           cat > work/fdroid/config.yml <<'EOF'
