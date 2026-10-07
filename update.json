@@ -1,6 +1,6 @@
 {
   "versionCode": 700,
   "versionName": "v7.0.0",
-  "downloadUrl": "https://github.com/SteveYuanlong9321/Tickets-App/releases/latest/download/app-release.apk",
+  "downloadUrl": "https://github.com/SteveYuanlong9321/Tickets/releases/latest/download/app-release.apk",
   "changelog": "v7.0.0：智能地铁新Beta版更新，支持包含港台在内的共40个中国城市和7个美国城市；新增 GPS 实时行程跟踪、站点状态识别、区间进度与“我已到达下一站”手动推进；统一同步 Live Update、Samsung Now Bar 与 Xiaomi SuperIsland。澳门后续接入。"
 }
