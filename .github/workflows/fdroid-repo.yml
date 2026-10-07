@@ -203,6 +203,8 @@ jobs:
 
           mkdir -p work/fdroid/metadata/com.example.tickets/en-US/images
           cp assets/tickets-app-icon.png work/fdroid/metadata/com.example.tickets/en-US/images/icon.png
+          mkdir -p work/fdroid/archive/icons
+          cp assets/tickets-app-icon.png work/fdroid/archive/icons/tickets-app-icon.png
           cp assets/tickets-app-icon.png work/fdroid/tickets-app-icon.png
 
           cat > work/fdroid/config.yml <<'EOF'
@@ -210,7 +212,11 @@ jobs:
           repo_name: Tickets
           repo_icon: tickets-app-icon.png
           repo_description: Tickets 官方 F-Droid 仓库
-          archive_older: 0
+          archive_url: https://steveyuanlong9321.github.io/Tickets/fdroid/archive
+          archive_name: Tickets 历史版本
+          archive_description: Tickets 官方 F-Droid 历史版本仓库
+          archive_icon: tickets-app-icon.png
+          archive_older: 3
           keystore: keystore.p12
           repo_keyalias: repokey
           EOF
@@ -285,11 +291,15 @@ jobs:
         run: |
           set -euo pipefail
 
-          mkdir -p fdroid/repo fdroid/metadata
+          mkdir -p fdroid/repo fdroid/archive fdroid/metadata
           rm -rf fdroid/repo/*
+          rm -rf fdroid/archive/*
           rm -rf fdroid/metadata/*
 
           cp -R work/fdroid/repo/. fdroid/repo/
+          if [ -d work/fdroid/archive ]; then
+            cp -R work/fdroid/archive/. fdroid/archive/
+          fi
           cp -R work/fdroid/metadata/. fdroid/metadata/
 
           git config user.name "github-actions[bot]"
