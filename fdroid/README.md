@@ -6,7 +6,7 @@ Tickets 使用独立的 F-Droid 第三方仓库发布完整 APK，不改变主�
 
 用户添加仓库时使用：
 
-https://steveyuanlong9321.github.io/Tickets-App/fdroid/repo/
+https://steveyuanlong9321.github.io/Tickets/fdroid/repo/
 
 首次启用前需要在 GitHub 仓库的 Settings → Secrets and variables → Actions 中创建 Repository secret：
 
