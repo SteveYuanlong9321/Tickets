@@ -68,80 +68,55 @@ jobs:
           rm -rf work/download
           mkdir -p work/download
 
-          python3 - <<'PY'
-          import json
-          import os
-          import re
-          import subprocess
-          from pathlib import Path
-
-          repo = os.environ["GITHUB_REPOSITORY"]
-          releases_json = subprocess.check_output(
-              [
-                  "gh",
-                  "api",
-                  "--paginate",
-                  "--slurp",
-                  f"repos/{repo}/releases?per_page=100",
-              ],
-              text=True,
+          mapfile -t release_tags < <(
+            gh release list \
+              --repo "$GITHUB_REPOSITORY" \
+              --limit 100 \
+              --exclude-drafts \
+              --exclude-pre-releases \
+              --json tagName \
+              --jq '.[].tagName'
           )
-          pages = json.loads(releases_json)
-          releases = [release for page in pages for release in page]
 
-          total_apks = 0
-          download_root = Path("work/download")
-          repo_root = Path("work/fdroid/repo")
+          if [ "${#release_tags[@]}" -eq 0 ]; then
+            echo "No published GitHub releases were found."
+            exit 1
+          fi
 
-          for index, release in enumerate(releases, start=1):
-              if release.get("draft") or release.get("prerelease"):
-                  continue
+          total_apks=0
 
-              apk_assets = [
-                  asset
-                  for asset in release.get("assets", [])
-                  if asset.get("name", "").lower().endswith(".apk")
-              ]
-              if not apk_assets:
-                  continue
+          for tag in "${release_tags[@]}"; do
+            safe_tag="$(printf '%s' "$tag" | tr -cs 'A-Za-z0-9._-' '_')"
+            safe_tag="${safe_tag#_}"
+            safe_tag="${safe_tag%_}"
+            [ -n "$safe_tag" ] || safe_tag="release-$((total_apks + 1))"
 
-              tag = release.get("tag_name", f"release-{index}")
-              safe_tag = re.sub(r"[^A-Za-z0-9._-]+", "_", tag).strip("_") or f"release-{index}"
-              release_dir = download_root / f"{index:03d}-{safe_tag}"
-              release_dir.mkdir(parents=True, exist_ok=True)
+            release_dir="work/download/$safe_tag"
+            mkdir -p "$release_dir"
 
-              print(f"Collecting {tag}: {len(apk_assets)} APK asset(s)")
+            echo "Collecting APK from release: $tag"
 
-              for asset in apk_assets:
-                  name = asset["name"]
-                  safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", name)
-                  source = asset["url"]
-                  destination = release_dir / f"{safe_tag}-{safe_name}"
+            gh release download "$tag" \
+              --repo "$GITHUB_REPOSITORY" \
+              --pattern "*.apk" \
+              --dir "$release_dir"
 
-                  subprocess.run(
-                      [
-                          "gh",
-                          "api",
-                          "--header",
-                          "Accept: application/octet-stream",
-                          "--output",
-                          str(destination),
-                          source,
-                      ],
-                      check=True,
-                  )
+            apk_count="$(find "$release_dir" -maxdepth 1 -type f -name '*.apk' | wc -l)"
+            if [ "$apk_count" -ne 1 ]; then
+              echo "Expected exactly one APK in release $tag, found $apk_count."
+              find "$release_dir" -maxdepth 1 -type f -print
+              exit 1
+            fi
 
-                  final_name = f"{safe_tag}-{safe_name}"
-                  final_path = repo_root / final_name
-                  final_path.write_bytes(destination.read_bytes())
-                  total_apks += 1
+            apk_file="$(find "$release_dir" -maxdepth 1 -type f -name '*.apk' | head -n1)"
+            apk_name="$(basename "$apk_file")"
+            cp "$apk_file" "work/fdroid/repo/${safe_tag}-${apk_name}"
+            total_apks=$((total_apks + 1))
+          done
 
-          print(f"Collected {total_apks} APK(s) from published GitHub releases.")
-          if total_apks == 0:
-              raise SystemExit("No published release APKs were found.")
-          PY
+          echo "Collected $total_apks APK(s) from published GitHub releases."
 
-          cat > work/fdroid/config.yml <<'EOF'
+                    cat > work/fdroid/config.yml <<'EOF'
           repo_url: https://steveyuanlong9321.github.io/Tickets/fdroid/repo
           repo_name: Tickets
           repo_description: Tickets 官方 F-Droid 仓库
