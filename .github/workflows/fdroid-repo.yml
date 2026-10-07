@@ -116,9 +116,12 @@ jobs:
 
           echo "Collected $total_apks APK(s) from published GitHub releases."
 
-                    cat > work/fdroid/config.yml <<'EOF'
+                    cp assets/tickets-app-icon.png work/fdroid/tickets-app-icon.png
+
+          cat > work/fdroid/config.yml <<'EOF'
           repo_url: https://steveyuanlong9321.github.io/Tickets/fdroid/repo
           repo_name: Tickets
+          repo_icon: tickets-app-icon.png
           repo_description: Tickets 官方 F-Droid 仓库
           archive_older: 0
           keystore: keystore.p12
