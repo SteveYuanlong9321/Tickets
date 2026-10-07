@@ -76,9 +76,12 @@ jobs:
 
           latest_tag = releases_with_apk[0]["tag_name"]
           expected_count = len(releases_with_apk)
+          expected_main_count = min(3, expected_count)
+          expected_archive_count = max(expected_count - 3, 0)
 
           index_path = Path("fdroid/repo/index-v2.json")
           indexed_versions = []
+          index_data = {}
           if index_path.exists():
               try:
                   index_data = json.loads(index_path.read_text(encoding="utf-8"))
@@ -91,8 +94,27 @@ jobs:
               except (OSError, json.JSONDecodeError, AttributeError, TypeError):
                   indexed_versions = []
 
+          archive_index_path = Path("fdroid/archive/index-v2.json")
+          archived_versions = []
+          if archive_index_path.exists():
+              try:
+                  archive_index_data = json.loads(
+                      archive_index_path.read_text(encoding="utf-8")
+                  )
+                  package = archive_index_data.get("packages", {}).get(
+                      "com.example.tickets", {}
+                  )
+                  archived_versions = [
+                      version_info.get("manifest", {}).get("versionName")
+                      for version_info in package.get("versions", {}).values()
+                      if version_info.get("manifest", {}).get("versionName")
+                  ]
+              except (OSError, json.JSONDecodeError, AttributeError, TypeError):
+                  archived_versions = []
+
           latest_version = latest_tag[1:] if latest_tag.startswith("v") else latest_tag
           current_count = len(indexed_versions)
+          archive_count = len(archived_versions)
           latest_present = latest_version in indexed_versions
 
           repo_name = ""
@@ -107,9 +129,14 @@ jobs:
                   app_name = apps[0].get("name", "")
 
           expected_repo_description = "票据App官方F-Droid仓库，所有该App出现在Github上的的版本都将出现在此"
+          archive_ready = (
+              archive_count == expected_archive_count
+              and (expected_archive_count == 0 or archive_index_path.exists())
+          )
 
           update_needed = (
-              current_count != expected_count
+              current_count != expected_main_count
+              or not archive_ready
               or not latest_present
               or not index_path.exists()
               or repo_name != "票据"
@@ -118,7 +145,10 @@ jobs:
           )
 
           print(f"Published releases with APK: {expected_count}")
+          print(f"Expected main-repo versions: {expected_main_count}")
           print(f"Indexed F-Droid versions: {current_count}")
+          print(f"Expected archive versions: {expected_archive_count}")
+          print(f"Indexed archive versions: {archive_count}")
           print(f"Latest GitHub release: {latest_tag}")
           print(f"Latest version present in F-Droid index: {latest_present}")
           print(f"Repo name correct: {repo_name == '票据'}")
@@ -324,7 +354,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add fdroid/repo fdroid/metadata
+          git add fdroid/repo fdroid/archive fdroid/metadata
           if git diff --cached --quiet; then
             echo "No F-Droid repository changes to publish."
             exit 0
