@@ -67,7 +67,7 @@ a {
 
 .hero {
   position: relative;
-  width: min(760px, 100%);
+  width: min(1040px, 100%);
   margin: auto;
   padding: 7vh 0 9vh;
   display: flex;
@@ -153,7 +153,7 @@ a {
 }
 
 .release-link {
-  width: min(176px, calc(25% - 9px));
+  width: 240px;
   display: inline-flex;
   line-height: 0;
   border-radius: 17px;
@@ -241,6 +241,6 @@ a {
   }
 
   .release-link {
-    width: min(240px, 100%);
+    width: min(210px, 100%);
   }
 }
