@@ -95,16 +95,35 @@ jobs:
           current_count = len(indexed_versions)
           latest_present = latest_version in indexed_versions
 
+          repo_name = ""
+          repo_description = ""
+          app_name = ""
+          if index_path.exists():
+              repo_data = index_data.get("repo", {})
+              repo_name = repo_data.get("name", "")
+              repo_description = repo_data.get("description", "")
+              apps = index_data.get("apps", [])
+              if apps:
+                  app_name = apps[0].get("name", "")
+
+          expected_repo_description = "票据App官方F-Droid仓库，所有该App出现在Github上的的版本都将出现在此"
+
           update_needed = (
               current_count != expected_count
               or not latest_present
               or not index_path.exists()
+              or repo_name != "票据"
+              or repo_description != expected_repo_description
+              or app_name != "票据"
           )
 
           print(f"Published releases with APK: {expected_count}")
           print(f"Indexed F-Droid versions: {current_count}")
           print(f"Latest GitHub release: {latest_tag}")
           print(f"Latest version present in F-Droid index: {latest_present}")
+          print(f"Repo name correct: {repo_name == '票据'}")
+          print(f"Repo description correct: {repo_description == expected_repo_description}")
+          print(f"App name correct: {app_name == '票据'}")
           print(f"F-Droid update needed: {update_needed}")
 
           with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
@@ -209,9 +228,9 @@ jobs:
 
           cat > work/fdroid/config.yml <<'EOF'
           repo_url: https://steveyuanlong9321.github.io/Tickets/fdroid/repo
-          repo_name: Tickets
+          repo_name: 票据
           repo_icon: tickets-app-icon.png
-          repo_description: Tickets 官方 F-Droid 仓库
+          repo_description: 票据App官方F-Droid仓库，所有该App出现在Github上的的版本都将出现在此
           archive_url: https://steveyuanlong9321.github.io/Tickets/fdroid/archive
           archive_name: Tickets 历史版本
           archive_description: Tickets 官方 F-Droid 历史版本仓库
@@ -255,7 +274,7 @@ jobs:
           fi
 
           cat > "$META" <<'EOF'
-          Name: Tickets
+          Name: 票据
           Summary: 电子票据管理与设备间传票
           Description: |
             Tickets 是一款 Android 电子票据管理应用。
