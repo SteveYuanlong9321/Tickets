@@ -4,6 +4,9 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/fdroid-repo.yml"
   schedule:
     - cron: "17 4 * * *"
 
@@ -61,23 +64,82 @@ jobs:
           Path("work/keystore.p12").write_bytes(base64.b64decode(data["keystoreBase64"]))
           PY
 
-          TAG="$(gh release view --repo "$GITHUB_REPOSITORY" --json tagName -q .tagName)"
-          echo "Using latest release: $TAG"
-
           mkdir -p work/fdroid/repo work/fdroid/metadata
           rm -rf work/download
           mkdir -p work/download
 
-          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "*.apk" --dir work/download
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+          from pathlib import Path
 
-          apk_count="$(find work/download -maxdepth 1 -type f -name '*.apk' | wc -l)"
-          if [ "$apk_count" -ne 1 ]; then
-            echo "Expected exactly one APK in the latest release, found $apk_count."
-            find work/download -maxdepth 1 -type f -print
-            exit 1
-          fi
+          repo = os.environ["GITHUB_REPOSITORY"]
+          releases_json = subprocess.check_output(
+              [
+                  "gh",
+                  "api",
+                  "--paginate",
+                  "--slurp",
+                  f"repos/{repo}/releases?per_page=100",
+              ],
+              text=True,
+          )
+          pages = json.loads(releases_json)
+          releases = [release for page in pages for release in page]
 
-          cp "$(find work/download -maxdepth 1 -type f -name '*.apk' | head -n1)" work/fdroid/repo/
+          total_apks = 0
+          download_root = Path("work/download")
+          repo_root = Path("work/fdroid/repo")
+
+          for index, release in enumerate(releases, start=1):
+              if release.get("draft") or release.get("prerelease"):
+                  continue
+
+              apk_assets = [
+                  asset
+                  for asset in release.get("assets", [])
+                  if asset.get("name", "").lower().endswith(".apk")
+              ]
+              if not apk_assets:
+                  continue
+
+              tag = release.get("tag_name", f"release-{index}")
+              safe_tag = re.sub(r"[^A-Za-z0-9._-]+", "_", tag).strip("_") or f"release-{index}"
+              release_dir = download_root / f"{index:03d}-{safe_tag}"
+              release_dir.mkdir(parents=True, exist_ok=True)
+
+              print(f"Collecting {tag}: {len(apk_assets)} APK asset(s)")
+
+              for asset in apk_assets:
+                  name = asset["name"]
+                  safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", name)
+                  source = asset["url"]
+                  destination = release_dir / f"{safe_tag}-{safe_name}"
+
+                  subprocess.run(
+                      [
+                          "gh",
+                          "api",
+                          "--header",
+                          "Accept: application/octet-stream",
+                          "--output",
+                          str(destination),
+                          source,
+                      ],
+                      check=True,
+                  )
+
+                  final_name = f"{safe_tag}-{safe_name}"
+                  final_path = repo_root / final_name
+                  final_path.write_bytes(destination.read_bytes())
+                  total_apks += 1
+
+          print(f"Collected {total_apks} APK(s) from published GitHub releases.")
+          if total_apks == 0:
+              raise SystemExit("No published release APKs were found.")
+          PY
 
           cat > work/fdroid/config.yml <<'EOF'
           repo_url: https://steveyuanlong9321.github.io/Tickets/fdroid/repo
