@@ -176,6 +176,13 @@ a {
   border-radius: 17px;
 }
 
+.release-link[href*="apkpure"],
+.release-link[href*="uptodown"],
+.release-link[href*="apkpure"] .release-badge,
+.release-link[href*="uptodown"] .release-badge {
+  border-radius: 10px;
+}
+
 .hero-meta {
   display: flex;
   align-items: center;
