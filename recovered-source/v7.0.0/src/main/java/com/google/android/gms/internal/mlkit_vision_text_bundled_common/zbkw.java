@@ -1,0 +1,58 @@
+package com.google.android.gms.internal.mlkit_vision_text_bundled_common;
+
+import java.util.List;
+import javax.annotation.CheckForNull;
+
+/* JADX INFO: compiled from: com.google.mlkit:text-recognition-bundled-common@@17.0.0 */
+/* JADX INFO: loaded from: classes4.dex */
+final class zbkw extends zbkx {
+    final transient int zba;
+    final transient int zbb;
+    final /* synthetic */ zbkx zbc;
+
+    zbkw(zbkx zbkxVar, int i, int i2) {
+        this.zbc = zbkxVar;
+        this.zba = i;
+        this.zbb = i2;
+    }
+
+    @Override // java.util.List
+    public final Object get(int i) {
+        zbkj.zba(i, this.zbb, "index");
+        return this.zbc.get(i + this.zba);
+    }
+
+    @Override // java.util.AbstractCollection, java.util.Collection, java.util.List
+    public final int size() {
+        return this.zbb;
+    }
+
+    @Override // com.google.android.gms.internal.mlkit_vision_text_bundled_common.zbkx, java.util.List
+    public final /* bridge */ /* synthetic */ List subList(int i, int i2) {
+        return subList(i, i2);
+    }
+
+    @Override // com.google.android.gms.internal.mlkit_vision_text_bundled_common.zbkt
+    final int zbb() {
+        return this.zbc.zbc() + this.zba + this.zbb;
+    }
+
+    @Override // com.google.android.gms.internal.mlkit_vision_text_bundled_common.zbkt
+    final int zbc() {
+        return this.zbc.zbc() + this.zba;
+    }
+
+    @Override // com.google.android.gms.internal.mlkit_vision_text_bundled_common.zbkt
+    @CheckForNull
+    final Object[] zbe() {
+        return this.zbc.zbe();
+    }
+
+    @Override // com.google.android.gms.internal.mlkit_vision_text_bundled_common.zbkx
+    /* JADX INFO: renamed from: zbf */
+    public final zbkx subList(int i, int i2) {
+        zbkj.zbd(i, i2, this.zbb);
+        int i3 = this.zba;
+        return this.zbc.subList(i + i3, i2 + i3);
+    }
+}

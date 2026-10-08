@@ -1,0 +1,1730 @@
+{
+  "source_primary": "用户提供的第1-23张线路颜色图片（本版本只以图片实际色块为显示颜色来源）",
+  "source_secondary": [
+    "第1-18张：各城市1-18号线路颜色图",
+    "第19张：全国主要城市线路颜色总表",
+    "第20-21张：深圳地铁线路颜色专图",
+    "第22-23张：香港MTR线路颜色专图"
+  ],
+  "extraction": {
+    "method": "直接从用户提供的23张图片中的线路色块主色像素提取显示HEX；不使用网页、官方数据库或模型判断覆盖图片颜色。",
+    "hex_note": "image_hex 表示用户图片中的实际视觉色，不声称为运营方公布的官方HEX。",
+    "priority": "城市/线路专图优先于全国总表；深圳1-20使用第20-21张专图中对应线路；香港使用第22-23张专图中对应线路；其他线路使用第19张总表或对应1-18号线路图。",
+    "gray_policy": "图片中明确为灰色线路色块的线路保留；纯“无”占位且没有对应线路色块的记录不写入。"
+  },
+  "cities": {
+    "北京": [
+      {
+        "line_id": "1",
+        "image_hex": "#C5382F"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#0F77B4"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#E21442"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#00979E"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#BE1D9F"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#D4A555"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#FEC375"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#009A76"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#98CB02"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#09A0CD"
+      },
+      {
+        "line_id": "11",
+        "image_hex": "#FD7E75"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#C47322"
+      },
+      {
+        "line_id": "13",
+        "image_hex": "#FECB32"
+      },
+      {
+        "line_id": "14",
+        "image_hex": "#EFADB9"
+      },
+      {
+        "line_id": "15",
+        "image_hex": "#7C3699"
+      },
+      {
+        "line_id": "16",
+        "image_hex": "#65A624"
+      },
+      {
+        "line_id": "17",
+        "image_hex": "#00B2AE"
+      },
+      {
+        "line_id": "18",
+        "image_hex": "#5C5DAF"
+      },
+      {
+        "line_id": "19",
+        "image_hex": "#D3A7C0"
+      },
+      {
+        "line_id": "20",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "22",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "YZ",
+        "image_hex": "#E10178"
+      },
+      {
+        "line_id": "FS",
+        "image_hex": "#E15F25"
+      },
+      {
+        "line_id": "S1",
+        "image_hex": "#B35823"
+      },
+      {
+        "line_id": "CP",
+        "image_hex": "#E081AD"
+      },
+      {
+        "line_id": "28",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "CAE",
+        "image_hex": "#A29EBA"
+      },
+      {
+        "line_id": "DAE",
+        "image_hex": "#034A9C"
+      },
+      {
+        "line_id": "M101",
+        "image_hex": "#D8D8D8"
+      }
+    ],
+    "上海": [
+      {
+        "line_id": "1",
+        "image_hex": "#EB3D3E"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#98CB02"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#FDD501"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#7C5FB3"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#A477CC"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#FF339A"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#FF7743"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#329DEF"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#87CCED"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#C7AAD6"
+      },
+      {
+        "line_id": "11",
+        "image_hex": "#913F4D"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#279359"
+      },
+      {
+        "line_id": "13",
+        "image_hex": "#FC97BF"
+      },
+      {
+        "line_id": "14",
+        "image_hex": "#909046"
+      },
+      {
+        "line_id": "15",
+        "image_hex": "#BBA888"
+      },
+      {
+        "line_id": "16",
+        "image_hex": "#7FD8D4"
+      },
+      {
+        "line_id": "17",
+        "image_hex": "#C78788"
+      },
+      {
+        "line_id": "18",
+        "image_hex": "#DBAD79"
+      },
+      {
+        "line_id": "19",
+        "image_hex": "#D9D9DA"
+      },
+      {
+        "line_id": "20",
+        "image_hex": "#D6D6D6"
+      },
+      {
+        "line_id": "21",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "22",
+        "image_hex": "#D6D6D6"
+      },
+      {
+        "line_id": "23",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "PJ",
+        "image_hex": "#B6B6B6"
+      },
+      {
+        "line_id": "AL",
+        "image_hex": "#246790"
+      },
+      {
+        "line_id": "JM",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "NH",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "NF",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "DZ",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "ML",
+        "image_hex": "#068698"
+      }
+    ],
+    "广州": [
+      {
+        "line_id": "1",
+        "image_hex": "#FFB00B"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#0092CD"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#FF8434"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#008742"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#FF3334"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#BA478C"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#7CC64D"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#00B6BA"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#53D398"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#789EC3"
+      },
+      {
+        "line_id": "11",
+        "image_hex": "#FFB00B"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#676D23"
+      },
+      {
+        "line_id": "13",
+        "image_hex": "#AFAC45"
+      },
+      {
+        "line_id": "14",
+        "image_hex": "#903232"
+      },
+      {
+        "line_id": "18",
+        "image_hex": "#1D65B9"
+      },
+      {
+        "line_id": "21",
+        "image_hex": "#1F1844"
+      },
+      {
+        "line_id": "22",
+        "image_hex": "#D45126"
+      },
+      {
+        "line_id": "24",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "APM",
+        "image_hex": "#03B6E1"
+      }
+    ],
+    "深圳": [
+      {
+        "line_id": "1",
+        "image_hex": "#08A94B"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#B5501C"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#00A3DC"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#D21C1B"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#914897"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#21B4AC"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#013990"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#B5501C"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#86666B"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#E86591"
+      },
+      {
+        "line_id": "11",
+        "image_hex": "#631638"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#A48CAC"
+      },
+      {
+        "line_id": "13",
+        "image_hex": "#D18108"
+      },
+      {
+        "line_id": "14",
+        "image_hex": "#EBC95B"
+      },
+      {
+        "line_id": "15",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "16",
+        "image_hex": "#312086"
+      },
+      {
+        "line_id": "17",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "19",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "20",
+        "image_hex": "#99D3D7"
+      },
+      {
+        "line_id": "22",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "25",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "27",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "29",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "32",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "6B",
+        "image_hex": "#168470"
+      },
+      {
+        "line_id": "P1",
+        "image_hex": "#1C70D0"
+      },
+      {
+        "line_id": "SD",
+        "image_hex": "#D7D7D7"
+      }
+    ],
+    "成都": [
+      {
+        "line_id": "1",
+        "image_hex": "#253D95"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FF8522"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#EC4E8B"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#11AB49"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#C64AC6"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#C08752"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#73C4D9"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#B8D229"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#FFB144"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#3566CC"
+      },
+      {
+        "line_id": "13",
+        "image_hex": "#CEB500"
+      },
+      {
+        "line_id": "17",
+        "image_hex": "#9AD9AE"
+      },
+      {
+        "line_id": "18",
+        "image_hex": "#4C938D"
+      },
+      {
+        "line_id": "19",
+        "image_hex": "#88ABE3"
+      },
+      {
+        "line_id": "27",
+        "image_hex": "#01A2DD"
+      },
+      {
+        "line_id": "30",
+        "image_hex": "#F47499"
+      },
+      {
+        "line_id": "S3",
+        "image_hex": "#77787A"
+      },
+      {
+        "line_id": "S5",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "S11",
+        "image_hex": "#D6D6D6"
+      }
+    ],
+    "杭州": [
+      {
+        "line_id": "1",
+        "image_hex": "#FF3334"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FF9233"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#FFCC01"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#66CA32"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#22B6DC"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#0372CE"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#993CAF"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#CF0072"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#CE4300"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#DBA90C"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "15",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "16",
+        "image_hex": "#FFBD73"
+      },
+      {
+        "line_id": "18",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "19",
+        "image_hex": "#45CDE5"
+      },
+      {
+        "line_id": "HH",
+        "image_hex": "#0074C8"
+      },
+      {
+        "line_id": "HC",
+        "image_hex": "#D8D8D8"
+      }
+    ],
+    "武汉": [
+      {
+        "line_id": "1",
+        "image_hex": "#1A7AC6"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FFA6D4"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#EBBD70"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#99CC33"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#A72D38"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#027D3C"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#FF9700"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#9BC3CF"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "11",
+        "image_hex": "#FDCB36"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#00A0E9"
+      },
+      {
+        "line_id": "16",
+        "image_hex": "#EC67C0"
+      },
+      {
+        "line_id": "19",
+        "image_hex": "#1B9E77"
+      },
+      {
+        "line_id": "YL",
+        "image_hex": "#CE068E"
+      }
+    ],
+    "重庆": [
+      {
+        "line_id": "1",
+        "image_hex": "#FB1D34"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#0E9F3A"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#3266CC"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#F57F01"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#00A5D7"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#FC6F9A"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#A34140"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#8547B2"
+      },
+      {
+        "line_id": "15",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "17",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "18",
+        "image_hex": "#28D2C9"
+      },
+      {
+        "line_id": "24",
+        "image_hex": "#D9D9D9"
+      },
+      {
+        "line_id": "27",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "0",
+        "image_hex": "#F1A801"
+      },
+      {
+        "line_id": "Y1",
+        "image_hex": "#016CC7"
+      },
+      {
+        "line_id": "JT",
+        "image_hex": "#0456B9"
+      },
+      {
+        "line_id": "BT",
+        "image_hex": "#0358B5"
+      },
+      {
+        "line_id": "YC",
+        "image_hex": "#D7D7D7"
+      }
+    ],
+    "南京": [
+      {
+        "line_id": "1",
+        "image_hex": "#12AAFE"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#D32929"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#359950"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#8465C3"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#FDDA26"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#3C7719"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#E3BF73"
+      },
+      {
+        "line_id": "11",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "S1",
+        "image_hex": "#4DBCB3"
+      },
+      {
+        "line_id": "S2",
+        "image_hex": "#942A2E"
+      },
+      {
+        "line_id": "S3",
+        "image_hex": "#BE83AD"
+      },
+      {
+        "line_id": "S4",
+        "image_hex": "#FE600A"
+      },
+      {
+        "line_id": "S5",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "S6",
+        "image_hex": "#C98CD5"
+      },
+      {
+        "line_id": "S7",
+        "image_hex": "#B16C7F"
+      },
+      {
+        "line_id": "S8",
+        "image_hex": "#FE7F03"
+      },
+      {
+        "line_id": "S9",
+        "image_hex": "#FFC408"
+      }
+    ],
+    "西安": [
+      {
+        "line_id": "1",
+        "image_hex": "#187CEB"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#E83838"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#DE6CB2"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#68C9C0"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#A0C93D"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#6C5ECD"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#F6B01C"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#FF8B2C"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#079460"
+      },
+      {
+        "line_id": "14",
+        "image_hex": "#2EB9FC"
+      },
+      {
+        "line_id": "15",
+        "image_hex": "#FF628D"
+      },
+      {
+        "line_id": "16",
+        "image_hex": "#FE8163"
+      },
+      {
+        "line_id": "XH",
+        "image_hex": "#730362"
+      },
+      {
+        "line_id": "YB",
+        "image_hex": "#BA0701"
+      }
+    ],
+    "天津": [
+      {
+        "line_id": "1",
+        "image_hex": "#D7212E"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#E8D70B"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#0CA0E0"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#198432"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#FF7300"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#CF3DA8"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#C88F40"
+      },
+      {
+        "line_id": "6²",
+        "image_hex": "#81329D"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#0047AF"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#BFDA01"
+      },
+      {
+        "line_id": "11",
+        "image_hex": "#125290"
+      },
+      {
+        "line_id": "B1",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "Z2",
+        "image_hex": "#D7D7D7"
+      },
+      {
+        "line_id": "Z4",
+        "image_hex": "#A483B2"
+      },
+      {
+        "line_id": "JJ",
+        "image_hex": "#F6B5C6"
+      }
+    ],
+    "郑州": [
+      {
+        "line_id": "1",
+        "image_hex": "#FF3334"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FFCC01"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#FE9900"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#3DA0F3"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#479E7B"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#AA139C"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#D49F59"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#E4E685"
+      },
+      {
+        "line_id": "CJ",
+        "image_hex": "#848B46"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#C15A5B"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#1E5F9F"
+      },
+      {
+        "line_id": "14",
+        "image_hex": "#B189BD"
+      },
+      {
+        "line_id": "ZX",
+        "image_hex": "#1B4155"
+      }
+    ],
+    "苏州": [
+      {
+        "line_id": "1",
+        "image_hex": "#63BF2E"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#E83838"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#FF9A35"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#148EE3"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#F151B1"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#3FBAE4"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#A67AC9"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#A19201"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "11",
+        "image_hex": "#FCCEB4"
+      }
+    ],
+    "宁波": [
+      {
+        "line_id": "1",
+        "image_hex": "#008BD6"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#EB2F2E"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#FFA429"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#A2C60C"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#2630A1"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#18854E"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#875E32"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#F356A5"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#ECEDEF"
+      }
+    ],
+    "合肥": [
+      {
+        "line_id": "1",
+        "image_hex": "#F04444"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#3B70F2"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#1D861D"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#FE9901"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#B0D343"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#C99FCD"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#6EBAEB"
+      },
+      {
+        "line_id": "S1",
+        "image_hex": "#D8D8D8"
+      }
+    ],
+    "长沙": [
+      {
+        "line_id": "1",
+        "image_hex": "#FF3334"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#01AAFF"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#8FCC40"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#B169CC"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#FFCC33"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#3E64D1"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "S1",
+        "image_hex": "#073E26"
+      },
+      {
+        "line_id": "S2",
+        "image_hex": "#EC92A8"
+      },
+      {
+        "line_id": "Y1",
+        "image_hex": "#1CA792"
+      }
+    ],
+    "青岛": [
+      {
+        "line_id": "1",
+        "image_hex": "#FFC438"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#DC4242"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#2A7DDD"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#007936"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#6AA2DB"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#ECEEF0"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#F96EC7"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "LG",
+        "image_hex": "#2F409A"
+      },
+      {
+        "line_id": "XHA",
+        "image_hex": "#009A7E"
+      },
+      {
+        "line_id": "15",
+        "image_hex": "#ECEDEF"
+      }
+    ],
+    "济南": [
+      {
+        "line_id": "1",
+        "image_hex": "#CD67CD"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FFCC33"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#2764BF"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#4D964F"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#59B7EA"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#7747BF"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "JY",
+        "image_hex": "#5AC3BE"
+      },
+      {
+        "line_id": "Y1",
+        "image_hex": "#2B7A9F"
+      }
+    ],
+    "昆明": [
+      {
+        "line_id": "1",
+        "image_hex": "#FE0000"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#2B7DE0"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#D663CA"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#FE9900"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#36BA55"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#27C1B9"
+      }
+    ],
+    "南宁": [
+      {
+        "line_id": "1",
+        "image_hex": "#2CA94E"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FF3334"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#9966CB"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#C4CB23"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#3266CC"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#ECEDEF"
+      }
+    ],
+    "沈阳": [
+      {
+        "line_id": "1",
+        "image_hex": "#EF4B4A"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FF8F43"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#F973BA"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#8958C1"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#3B88D6"
+      },
+      {
+        "line_id": "10",
+        "image_hex": "#86C038"
+      }
+    ],
+    "长春": [
+      {
+        "line_id": "1",
+        "image_hex": "#E84C4D"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#237BC5"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#409C53"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#7D5EDD"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#F98AB5"
+      },
+      {
+        "line_id": "7",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "8",
+        "image_hex": "#3EBDCC"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#ECEEF0"
+      }
+    ],
+    "大连": [
+      {
+        "line_id": "1",
+        "image_hex": "#8CBB31"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#2688EB"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#FF5B97"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#FF393A"
+      },
+      {
+        "line_id": "12",
+        "image_hex": "#8669E0"
+      },
+      {
+        "line_id": "13",
+        "image_hex": "#FECD33"
+      }
+    ],
+    "无锡": [
+      {
+        "line_id": "1",
+        "image_hex": "#F44242"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#34BC4E"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#30B8F4"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#BD40C0"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "S1",
+        "image_hex": "#EC2936"
+      },
+      {
+        "line_id": "S2",
+        "image_hex": "#D8D7D7"
+      }
+    ],
+    "徐州": [
+      {
+        "line_id": "1",
+        "image_hex": "#E20001"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#F6A017"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#0AA4EC"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#70399E"
+      }
+    ],
+    "南昌": [
+      {
+        "line_id": "1",
+        "image_hex": "#FF1F1F"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FFCC00"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#2C6FDA"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#1A9F42"
+      }
+    ],
+    "香港": [
+      {
+        "line_id": "EA",
+        "image_hex": "#5EB6E4"
+      },
+      {
+        "line_id": "KT",
+        "image_hex": "#1A9431"
+      },
+      {
+        "line_id": "TW",
+        "image_hex": "#FE0000"
+      },
+      {
+        "line_id": "IS",
+        "image_hex": "#0860A8"
+      },
+      {
+        "line_id": "TC",
+        "image_hex": "#FE7F1E"
+      },
+      {
+        "line_id": "AE",
+        "image_hex": "#1B766F"
+      },
+      {
+        "line_id": "TK",
+        "image_hex": "#6C208C"
+      },
+      {
+        "line_id": "MO",
+        "image_hex": "#9A3B25"
+      },
+      {
+        "line_id": "DR",
+        "image_hex": "#F74FA6"
+      },
+      {
+        "line_id": "SI",
+        "image_hex": "#99CF17"
+      },
+      {
+        "line_id": "NO",
+        "image_hex": "#D9D9D9"
+      }
+    ],
+    "贵阳": [
+      {
+        "line_id": "1",
+        "image_hex": "#78CC36"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#075EBD"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#F6314F"
+      },
+      {
+        "line_id": "S1",
+        "image_hex": "#932583"
+      }
+    ],
+    "佛山": [
+      {
+        "line_id": "GF",
+        "image_hex": "#C3D600"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#F42535"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#0F24A4"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#ECEDEF"
+      }
+    ],
+    "福州": [
+      {
+        "line_id": "1",
+        "image_hex": "#F04848"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#2C8239"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#FF7723"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#963874"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#1370D8"
+      },
+      {
+        "line_id": "BH",
+        "image_hex": "#09AABE"
+      }
+    ],
+    "厦门": [
+      {
+        "line_id": "1",
+        "image_hex": "#FF9934"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#4DBB3E"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#31BFD7"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "9",
+        "image_hex": "#ECEDEF"
+      }
+    ],
+    "石家庄": [
+      {
+        "line_id": "1",
+        "image_hex": "#EF4343"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FFB600"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#47B8E4"
+      },
+      {
+        "line_id": "4",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#ECEDEF"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#ECEDEF"
+      }
+    ],
+    "哈尔滨": [
+      {
+        "line_id": "1",
+        "image_hex": "#EA3E3E"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#388A59"
+      },
+      {
+        "line_id": "3",
+        "image_hex": "#FFB003"
+      }
+    ],
+    "东莞": [
+      {
+        "line_id": "1",
+        "image_hex": "#044CA1"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#F21622"
+      }
+    ],
+    "乌鲁木齐": [
+      {
+        "line_id": "1",
+        "image_hex": "#10069E"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "MRT",
+        "image_hex": "#10039D"
+      }
+    ],
+    "呼和浩特": [
+      {
+        "line_id": "1",
+        "image_hex": "#E72211"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#025BAD"
+      }
+    ],
+    "温州": [
+      {
+        "line_id": "S1",
+        "image_hex": "#0360A8"
+      },
+      {
+        "line_id": "S2",
+        "image_hex": "#E10228"
+      },
+      {
+        "line_id": "S3",
+        "image_hex": "#D9D9D9"
+      }
+    ],
+    "兰州": [
+      {
+        "line_id": "1",
+        "image_hex": "#0381BB"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#FB0200"
+      }
+    ],
+    "常州": [
+      {
+        "line_id": "1",
+        "image_hex": "#CC5F58"
+      },
+      {
+        "line_id": "2",
+        "image_hex": "#52A0C3"
+      },
+      {
+        "line_id": "5",
+        "image_hex": "#D8D8D8"
+      },
+      {
+        "line_id": "6",
+        "image_hex": "#D7D7D7"
+      }
+    ]
+  },
+  "station_identity_rule": {
+    "required_fields_for_user_selected_station": [
+      "stationKey",
+      "routeId",
+      "displayName"
+    ],
+    "rule": "用户选择起点/终点后，后续路线规划、实时状态、换乘判断与通知发布必须继续使用所选 stationKey + routeId；禁止在后续阶段仅凭 displayName/name 做模糊 resolveStationKey。",
+    "reason": "防止深圳10号线坂田北被重新按站名模糊匹配成5号线坂田。"
+  },
+  "label_verification": {
+    "武汉 YL": "用户图中标识为 YL；外部资料也将 YL 对应为武汉阳逻线/21号线。citeturn590823search0turn590823search2",
+    "北京 M101": "北京官方/相关资料确认 M101 为北京城市副中心 M101 线。citeturn946635search2turn946635search46",
+    "天津 6²": "图中为“6²”样式；当前资料将天津8号线与6号线二期对应描述，并列出6号线二期。这里保留原图标识，避免擅自改写。citeturn946635search1turn946635search45",
+    "上海": "上海官方来源确认每条线路有独属标志色；本项目 HEX 仍以用户第14张图像色块为准。citeturn946635search0"
+  }
+}
