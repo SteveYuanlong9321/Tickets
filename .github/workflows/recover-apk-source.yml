@@ -1,0 +1,97 @@
+name: Recover 7.0.0 APK Source
+
+on:
+  push:
+    paths:
+      - ".github/workflows/recover-apk-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download v7.0.0 APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/apk
+          gh release download v7.0.0 --repo "$GITHUB_REPOSITORY" --pattern "*.apk" --dir /tmp/apk --clobber
+          apk="$(find /tmp/apk -maxdepth 1 -type f -name "*.apk" | head -n 1)"
+          test -n "$apk"
+          echo "APK=$apk" >> "$GITHUB_ENV"
+
+      - name: Download latest JADX
+        run: |
+          set -euo pipefail
+          url="$(curl -fsSL https://api.github.com/repos/skylot/jadx/releases/latest | jq -r '.assets[] | select(.name | test("^jadx-[0-9.]+\\.zip$")) | .browser_download_url' | head -n 1)"
+          test -n "$url"
+          curl -fsSL "$url" -o /tmp/jadx.zip
+          rm -rf /tmp/jadx
+          mkdir -p /tmp/jadx
+          unzip -q /tmp/jadx.zip -d /tmp/jadx
+          jadx_bin="$(find /tmp/jadx -type f -name jadx -perm -111 | head -n 1)"
+          test -n "$jadx_bin"
+          echo "JADX=$jadx_bin" >> "$GITHUB_ENV"
+
+      - name: Decompile application
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/jadx-out
+          "$JADX" --show-bad-code -d /tmp/jadx-out "$APK"
+
+      - name: Publish recovered source
+        run: |
+          set -euo pipefail
+
+          target="recovered-source/v7.0.0"
+          rm -rf "$target"
+          mkdir -p "$target/src/main/java" "$target/resources" "$target/meta"
+
+          if [ -d /tmp/jadx-out/sources/com/example/tickets ]; then
+            cp -R /tmp/jadx-out/sources/com/example/tickets "$target/src/main/java/"
+          fi
+
+          if [ -f /tmp/jadx-out/resources/AndroidManifest.xml ]; then
+            cp /tmp/jadx-out/resources/AndroidManifest.xml "$target/resources/AndroidManifest.xml"
+          fi
+
+          if [ -f /tmp/jadx-out/resources/assets/subway_line_colors.json ]; then
+            mkdir -p "$target/resources/assets"
+            cp /tmp/jadx-out/resources/assets/subway_line_colors.json "$target/resources/assets/subway_line_colors.json"
+          fi
+
+          unzip -p "$APK" META-INF/com/android/build/gradle/app-metadata.properties > "$target/meta/app-metadata.properties" || true
+          unzip -p "$APK" META-INF/version-control-info.textproto > "$target/meta/version-control-info.textproto" || true
+
+          sha256sum "$APK" | awk '{print $1}' > "$target/meta/apk-sha256.txt"
+          stat -c '%s' "$APK" > "$target/meta/apk-size-bytes.txt"
+
+          cat > "$target/README.md" <<'EOF'
+          # Tickets 7.0.0 Recovered Source
+
+          This directory contains source code recovered from the official Tickets v7.0.0 release APK.
+
+          The recovered code is not guaranteed to be byte-for-byte identical to the original authoring source. It is provided for reference, study, learning, maintenance, and continued open-source development.
+
+          The Android package namespace is preserved as `com.example.tickets`.
+
+          The recovery was performed from the released APK rather than from the author's current development project.
+          EOF
+
+          files_count="$(find "$target/src/main/java/com/example/tickets" -type f \( -name "*.java" -o -name "*.kt" \) 2>/dev/null | wc -l)"
+          echo "Recovered source files: $files_count"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$target"
+          git commit -m "Add recovered source from v7.0.0 APK" || {
+            echo "Nothing to commit"
+            exit 0
+          }
+          git push
