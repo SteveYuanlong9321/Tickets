@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0a10">
+  <meta name="description" content="Tickets 作者的酷安主页">
+  <title>Tickets · 酷安</title>
+  <link rel="stylesheet" href="./style.css?v=7.0.0-coolapk-01">
+  <style>
+    .coolapk-page {
+      width: min(620px, 100%);
+      margin: 0 auto;
+      padding: 54px 0 80px;
+      text-align: center;
+    }
+
+    .coolapk-back {
+      display: flex;
+      margin-bottom: 34px;
+      color: #aaa1b6;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .coolapk-page h1 {
+      margin: 0 0 10px;
+      font-size: clamp(38px, 7vw, 58px);
+      letter-spacing: -0.055em;
+    }
+
+    .coolapk-intro {
+      margin: 0;
+      color: #9d95a9;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .coolapk-qr {
+      display: block;
+      width: min(360px, 78vw);
+      height: auto;
+      margin: 34px auto 20px;
+      padding: 18px;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+    }
+
+    .coolapk-save {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.035);
+      color: #aaa3b7;
+      font-size: 13px;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+
+    .coolapk-save:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.055);
+      border-color: rgba(255, 255, 255, 0.17);
+    }
+
+    .coolapk-note {
+      margin: 18px 0 0;
+      color: #777184;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <main class="site">
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Tickets 首页">Tickets</a>
+      <span class="version">7.0.0</span>
+    </header>
+
+    <section class="coolapk-page">
+      <a class="coolapk-back" href="./author.html">← 返回 找到作者</a>
+
+      <h1>酷安</h1>
+      <p class="coolapk-intro">扫描二维码，打开我的酷安主页</p>
+
+      <img class="coolapk-qr" src="./assets/coolapk-qr.svg" alt="Steve1239 酷安主页二维码">
+
+      <a class="coolapk-save" href="./assets/coolapk-qr.svg" download="Steve1239-Coolapk-QR.svg">保存二维码</a>
+
+      <p class="coolapk-note">也可以长按二维码图片进行保存。</p>
+    </section>
+
+    <footer class="site-footer">
+      <span>Tickets · 7.0.0</span>
+      <div class="site-footer-links">
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="https://github.com/SteveYuanlong9321/Tickets" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
