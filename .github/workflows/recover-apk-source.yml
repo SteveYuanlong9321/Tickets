@@ -29,7 +29,7 @@ jobs:
       - name: Download latest JADX
         run: |
           set -euo pipefail
-          url="$(curl -fsSL https://api.github.com/repos/skylot/jadx/releases/latest | jq -r '.assets[] | select(.name | test("^jadx-[0-9.]+\\.zip$")) | .browser_download_url' | head -n 1)"
+          url="$(curl -fsSL https://api.github.com/repos/skylot/jadx/releases/latest | jq -r '.assets[] | select(.name | test("^jadx-[0-9.]+\\\\.zip$")) | .browser_download_url' | head -n 1)"
           test -n "$url"
           curl -fsSL "$url" -o /tmp/jadx.zip
           rm -rf /tmp/jadx
@@ -41,9 +41,16 @@ jobs:
 
       - name: Decompile application
         run: |
-          set -euo pipefail
+          set -uo pipefail
           rm -rf /tmp/jadx-out
-          "$JADX" --show-bad-code -d /tmp/jadx-out "$APK"
+          set +e
+          "$JADX" --show-bad-code -d /tmp/jadx-out "$APK" 2>&1 | tee /tmp/jadx.log
+          jadx_status=${PIPESTATUS[0]}
+          set -e
+          echo "JADX exit code: $jadx_status"
+          test -d /tmp/jadx-out/sources/com/example/tickets
+          cp /tmp/jadx.log /tmp/jadx-out/jadx.log
+          exit 0
 
       - name: Publish recovered source
         run: |
@@ -53,9 +60,7 @@ jobs:
           rm -rf "$target"
           mkdir -p "$target/src/main/java" "$target/resources" "$target/meta"
 
-          if [ -d /tmp/jadx-out/sources/com/example/tickets ]; then
-            cp -R /tmp/jadx-out/sources/com/example/tickets "$target/src/main/java/"
-          fi
+          cp -R /tmp/jadx-out/sources/com/example/tickets "$target/src/main/java/"
 
           if [ -f /tmp/jadx-out/resources/AndroidManifest.xml ]; then
             cp /tmp/jadx-out/resources/AndroidManifest.xml "$target/resources/AndroidManifest.xml"
@@ -65,6 +70,8 @@ jobs:
             mkdir -p "$target/resources/assets"
             cp /tmp/jadx-out/resources/assets/subway_line_colors.json "$target/resources/assets/subway_line_colors.json"
           fi
+
+          cp /tmp/jadx-out/jadx.log "$target/meta/jadx.log"
 
           unzip -p "$APK" META-INF/com/android/build/gradle/app-metadata.properties > "$target/meta/app-metadata.properties" || true
           unzip -p "$APK" META-INF/version-control-info.textproto > "$target/meta/version-control-info.textproto" || true
