@@ -29,7 +29,7 @@ jobs:
       - name: Download latest JADX
         run: |
           set -euo pipefail
-          url="$(curl -fsSL https://api.github.com/repos/skylot/jadx/releases/latest | jq -r '.assets[] | select(.name | test("^jadx-[0-9.]+\\\\.zip$")) | .browser_download_url' | head -n 1)"
+          url="$(curl -fsSL https://api.github.com/repos/skylot/jadx/releases/latest | jq -r '.assets[] | select(.name | test("^jadx-[0-9.]+\\.zip$")) | .browser_download_url' | head -n 1)"
           test -n "$url"
           curl -fsSL "$url" -o /tmp/jadx.zip
           rm -rf /tmp/jadx
