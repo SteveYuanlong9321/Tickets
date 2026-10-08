@@ -1,4 +1,5 @@
 name: Recover 7.0.0 APK Source
+# Recovery is based on the published v7.0.0 APK, not the local Android Studio project.
 
 on:
   push:
