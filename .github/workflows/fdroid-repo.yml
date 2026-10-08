@@ -256,6 +256,25 @@ jobs:
           cp assets/tickets-app-icon.png work/fdroid/archive/icons/tickets-app-icon.png
           cp assets/tickets-app-icon.png work/fdroid/tickets-app-icon.png
 
+          cat > work/fdroid/metadata/com.example.tickets.yml <<'EOF'
+          Name: 票据
+          Summary: 电子票据管理与设备间传票
+          Description: |
+            Tickets 是一款 Android 电子票据管理应用。
+
+            用于本地管理车票、机票、演出和门票等电子凭证，并支持设备之间传票。
+            当前发布版本保持完整功能，包括用户可选择的设备间传输连接方式以及实时通知功能。
+
+            官方项目：
+            https://github.com/SteveYuanlong9321/Tickets
+          WebSite: https://steveyuanlong9321.github.io/Tickets/
+          SourceCode: https://github.com/SteveYuanlong9321/Tickets
+          IssueTracker: https://github.com/SteveYuanlong9321/Tickets/issues
+          AuthorName: SteveYuanlong9321
+          Categories:
+            - Travel & Local
+          EOF
+
           cat > work/fdroid/config.yml <<'EOF'
           repo_url: https://steveyuanlong9321.github.io/Tickets/fdroid/repo
           repo_name: 票据
@@ -293,47 +312,54 @@ jobs:
         run: |
           fdroid update --create-metadata --verbose
 
-      - name: Add Tickets metadata
-        if: env.FDROID_UPDATE_NEEDED == 'true'
-        run: |
-          set -euo pipefail
-          META="$(find work/fdroid/metadata -maxdepth 1 -type f -name '*.yml' | head -n1)"
-          if [ -z "$META" ]; then
-            echo "No metadata file was created by fdroid update."
-            exit 1
-          fi
-
-          cat > "$META" <<'EOF'
-          Name: 票据
-          Summary: 电子票据管理与设备间传票
-          Description: |
-            Tickets 是一款 Android 电子票据管理应用。
-
-            用于本地管理车票、机票、演出和门票等电子凭证，并支持设备之间传票。
-            当前发布版本保持完整功能，包括用户可选择的设备间传输连接方式以及实时通知功能。
-
-            官方项目：
-            https://github.com/SteveYuanlong9321/Tickets
-          WebSite: https://steveyuanlong9321.github.io/Tickets/
-          SourceCode: https://github.com/SteveYuanlong9321/Tickets
-          IssueTracker: https://github.com/SteveYuanlong9321/Tickets/issues
-          AuthorName: SteveYuanlong9321
-          Categories:
-            - Travel & Local
-          EOF
-
-      - name: Ensure app icon is in repo graphics before final indexing
-        if: env.FDROID_UPDATE_NEEDED == 'true'
-        run: |
-          set -euo pipefail
-          mkdir -p work/fdroid/repo/com.example.tickets/en-US
-          cp assets/tickets-app-icon.png work/fdroid/repo/com.example.tickets/en-US/icon.png
-
-      - name: Regenerate repository index after metadata update
+      - name: Validate repository index consistency
         if: env.FDROID_UPDATE_NEEDED == 'true'
         working-directory: work/fdroid
         run: |
-          fdroid update --verbose
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          for section in ("repo", "archive"):
+              root = Path(section)
+              index_path = root / "index-v2.json"
+              entry_path = root / "entry.json"
+
+              index = json.loads(index_path.read_text(encoding="utf-8"))
+              entry = json.loads(entry_path.read_text(encoding="utf-8"))
+
+              repo_timestamp = index.get("repo", {}).get("timestamp")
+              entry_timestamp = entry.get("timestamp")
+              if repo_timestamp != entry_timestamp:
+                  raise SystemExit(
+                      f"{section}: timestamp mismatch: index={repo_timestamp}, entry={entry_timestamp}"
+                  )
+
+              raw = index_path.read_bytes()
+              actual_sha = hashlib.sha256(raw).hexdigest()
+              actual_size = len(raw)
+              declared = entry.get("index", {})
+
+              if declared.get("sha256") != actual_sha:
+                  raise SystemExit(
+                      f"{section}: index SHA-256 mismatch: entry={declared.get('sha256')}, actual={actual_sha}"
+                  )
+              if declared.get("size") != actual_size:
+                  raise SystemExit(
+                      f"{section}: index size mismatch: entry={declared.get('size')}, actual={actual_size}"
+                  )
+
+              for timestamp, diff_info in entry.get("diffs", {}).items():
+                  diff_path = root / diff_info["name"].lstrip("/")
+                  if not diff_path.is_file():
+                      raise SystemExit(
+                          f"{section}: missing diff file for source timestamp {timestamp}: {diff_path}"
+                      )
+
+          print("F-Droid repo and archive index timestamps/hashes are internally consistent.")
+          PY
 
       - name: Publish F-Droid repository to GitHub Pages
         if: env.FDROID_UPDATE_NEEDED == 'true'
