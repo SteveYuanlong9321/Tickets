@@ -99,6 +99,7 @@ https://github.com/SteveYuanlong9321/Tickets/releases
 隐私政策：  
 https://steveyuanlong9321.github.io/Tickets/privacy.html
 
+温馨提示：源代码因为新版本修复和开发时已经被新代码覆盖了，故此库里的源代码属于正式版Apk的提取代码，仅供参考和学习，欢迎直接使用！
 ---
 
 Tickets App · Version 7.0.0
