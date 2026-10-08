@@ -61,7 +61,8 @@ jobs:
           rm -rf "$target"
           mkdir -p "$target/src/main/java" "$target/resources" "$target/meta"
 
-          cp -R /tmp/jadx-out/sources/com/example/tickets "$target/src/main/java/"
+          mkdir -p "$target/src/main/java/com"
+          cp -R /tmp/jadx-out/sources/com "$target/src/main/java/"
 
           if [ -f /tmp/jadx-out/resources/AndroidManifest.xml ]; then
             cp /tmp/jadx-out/resources/AndroidManifest.xml "$target/resources/AndroidManifest.xml"
