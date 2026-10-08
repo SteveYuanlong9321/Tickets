@@ -45,6 +45,32 @@ a {
   justify-content: space-between;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.author-button {
+  padding: 7px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #aaa3b7;
+  font-size: 12px;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.author-button:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.17);
+}
+
+.author-button:active {
+  transform: scale(0.98);
+}
+
 .brand {
   font-size: clamp(31px, 5vw, 42px);
   font-weight: 800;
