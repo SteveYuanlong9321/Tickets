@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0a10">
+  <meta name="description" content="Tickets 作者主页与社交媒体">
+  <title>Tickets · 找到作者</title>
+  <link rel="stylesheet" href="./style.css?v=7.0.0-author-01">
+  <style>
+    .author-page {
+      width: min(820px, 100%);
+      margin: 0 auto;
+      padding: 54px 0 80px;
+    }
+
+    .author-page h1 {
+      margin: 0 0 12px;
+      font-size: clamp(38px, 7vw, 60px);
+      letter-spacing: -0.055em;
+    }
+
+    .author-intro {
+      margin: 0;
+      color: #9d95a9;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .author-links {
+      display: grid;
+      gap: 14px;
+      margin-top: 38px;
+    }
+
+    .author-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.025);
+      color: #f2edf8;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+
+    .author-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.045);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .author-link-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .author-link-subtitle {
+      margin-top: 4px;
+      color: #8d8698;
+      font-size: 12px;
+    }
+
+    .author-link-arrow {
+      color: #8f879b;
+      font-size: 18px;
+    }
+
+    .author-back {
+      display: inline-flex;
+      margin-bottom: 34px;
+      color: #aaa1b6;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main class="site">
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Tickets 首页">Tickets</a>
+      <span class="version">7.0.0</span>
+    </header>
+
+    <section class="author-page">
+      <a class="author-back" href="./index.html">← 返回 Tickets</a>
+
+      <h1>找到作者</h1>
+      <p class="author-intro">
+        想了解 Tickets、关注开发动态，或者联系作者，可以从这里找到我的主页。
+      </p>
+
+      <div class="author-links">
+        <a class="author-link" href="https://www.xiaohongshu.com/user/profile/64912a20000000001c0290f9" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="author-link-title">小红书</div>
+            <div class="author-link-subtitle">关注开发动态与日常分享</div>
+          </div>
+          <span class="author-link-arrow">↗</span>
+        </a>
+
+        <a class="author-link" href="https://space.bilibili.com/3546803788057162" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="author-link-title">B站</div>
+            <div class="author-link-subtitle">视频内容与开发记录</div>
+          </div>
+          <span class="author-link-arrow">↗</span>
+        </a>
+
+        <a class="author-link" href="https://github.com/SteveYuanlong9321" target="_blank" rel="noopener noreferrer">
+          <div>
+            <div class="author-link-title">GitHub</div>
+            <div class="author-link-subtitle">Tickets 源码、版本与项目主页</div>
+          </div>
+          <span class="author-link-arrow">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>Tickets · 7.0.0</span>
+      <div class="site-footer-links">
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="https://github.com/SteveYuanlong9321/Tickets" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
