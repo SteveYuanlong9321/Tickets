@@ -224,8 +224,18 @@ a {
   gap: 16px;
 }
 
+.site-footer-social {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .site-footer a {
   color: #9d95a9;
+}
+
+.site-footer .social-primary {
+  color: #e7d8ff;
 }
 
 @media (max-width: 520px) {
@@ -265,5 +275,15 @@ a {
 
   .release-link {
     width: min(210px, 100%);
+  }
+
+  .site-footer {
+    flex-wrap: wrap;
+    gap: 12px 18px;
+  }
+
+  .site-footer-links {
+    flex-wrap: wrap;
+    gap: 12px 14px;
   }
 }
