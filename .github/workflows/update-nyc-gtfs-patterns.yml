@@ -2,6 +2,10 @@ name: Update NYC GTFS Patterns
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/update-nyc-gtfs-patterns.yml"
+      - "scripts/build_nyc_gtfs_patterns.py"
   schedule:
     - cron: "17 6 * * *"
 
