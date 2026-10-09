@@ -27,14 +27,13 @@ def canonical_route_id(short_name: str, route_id: str) -> str:
 
 def read_csv_from_zip(zf: zipfile.ZipFile, name: str):
     with zf.open(name, "r") as raw:
-        with raw:
-            text = (line.decode("utf-8-sig") for line in raw)
-            yield from csv.DictReader(text)
+        text = (line.decode("utf-8-sig") for line in raw)
+        yield from csv.DictReader(text)
 
-def station_key(stop: dict) -> str:
+def station_id_from_row(stop: dict) -> str:
     parent = (stop.get("parent_station") or "").strip()
     stop_id = (stop.get("stop_id") or "").strip()
-    return f"nyc:gtfs:{parent or stop_id}"
+    return parent or stop_id
 
 def main() -> None:
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
@@ -46,7 +45,7 @@ def main() -> None:
         print(f"Downloading official MTA supplemented GTFS: {SOURCE_URL}")
         request = urllib.request.Request(
             SOURCE_URL,
-            headers={"User-Agent": "Tickets-NYC-GTFS-Pattern-Builder/1.0"},
+            headers={"User-Agent": "Tickets-NYC-GTFS-Pattern-Builder/1.1"},
         )
         with urllib.request.urlopen(request, timeout=120) as response, open(zip_path, "wb") as out:
             while True:
@@ -67,11 +66,16 @@ def main() -> None:
 
             source_routes = {}
             routes = {}
+
             for row in read_csv_from_zip(zf, "routes.txt"):
                 raw_route_id = (row.get("route_id") or "").strip()
                 short_name = (row.get("route_short_name") or "").strip()
                 route_type = int((row.get("route_type") or "0").strip() or "0")
-                if not raw_route_id or route_type != 1:
+                special_rail = (
+                    raw_route_id.upper() in {"GS", "SI"}
+                    or short_name.upper() in {"S", "SIR"}
+                )
+                if not raw_route_id or (route_type != 1 and not special_rail):
                     continue
 
                 canonical = canonical_route_id(short_name, raw_route_id)
@@ -87,8 +91,9 @@ def main() -> None:
             for row in read_csv_from_zip(zf, "stops.txt"):
                 stop_id = (row.get("stop_id") or "").strip()
                 if stop_id:
-                    stops[stop_id] = station_key(row)
+                    stops[stop_id] = station_id_from_row(row)
 
+            trips_in_order = []
             trips = {}
             for row in read_csv_from_zip(zf, "trips.txt"):
                 trip_id = (row.get("trip_id") or "").strip()
@@ -96,21 +101,22 @@ def main() -> None:
                 if not trip_id or source_route_id not in source_routes:
                     continue
 
-                trips[trip_id] = {
+                trip = {
                     "routeId": source_routes[source_route_id],
                     "directionId": (row.get("direction_id") or "").strip(),
                 }
+                trips[trip_id] = trip
+                trips_in_order.append(trip_id)
 
             trip_stops = defaultdict(list)
             for row in read_csv_from_zip(zf, "stop_times.txt"):
                 trip_id = (row.get("trip_id") or "").strip()
-                trip = trips.get(trip_id)
-                if not trip:
+                if trip_id not in trips:
                     continue
 
                 stop_id = (row.get("stop_id") or "").strip()
-                key = stops.get(stop_id)
-                if not key:
+                station_id = stops.get(stop_id)
+                if not station_id:
                     continue
 
                 try:
@@ -118,43 +124,48 @@ def main() -> None:
                 except ValueError:
                     continue
 
-                trip_stops[trip_id].append((sequence, key))
+                trip_stops[trip_id].append((sequence, station_id))
 
-        pattern_to_trip_ids = defaultdict(list)
-        pattern_details = {}
+        pattern_to_index = {}
+        pattern_details = []
+        pattern_indexes = []
 
-        matched_trips = 0
-        for trip_id, trip in trips.items():
+        for trip_id in trips_in_order:
+            trip = trips[trip_id]
             rows = trip_stops.get(trip_id, [])
-            if not rows:
-                continue
 
             rows.sort(key=lambda item: item[0])
-            station_keys = []
+            station_ids = []
             seen = set()
-            for _, key in rows:
-                if key in seen:
-                    continue
-                seen.add(key)
-                station_keys.append(key)
 
-            if len(station_keys) < 2:
+            for _, station_id in rows:
+                if station_id in seen:
+                    continue
+                seen.add(station_id)
+                station_ids.append(station_id)
+
+            if len(station_ids) < 2:
+                pattern_indexes.append(-1)
                 continue
 
+            route_id = trip["routeId"]
             direction = trip["directionId"]
-            pattern_id = f'{trip["routeId"]}|{direction}|{",".join(station_keys)}'
-            if pattern_id not in pattern_details:
-                pattern_details[pattern_id] = {
-                    "patternId": pattern_id,
-                    "routeId": trip["routeId"],
-                    "directionId": direction,
-                    "stationKeys": station_keys,
-                }
+            pattern_key = f'{route_id}|{direction}|{",".join(station_ids)}'
 
-            pattern_to_trip_ids[pattern_id].append(trip_id)
-            matched_trips += 1
+            index = pattern_to_index.get(pattern_key)
+            if index is None:
+                index = len(pattern_details)
+                pattern_to_index[pattern_key] = index
+                pattern_details.append({
+                    "r": route_id,
+                    "d": direction,
+                    "s": station_ids,
+                })
 
-        total_trips = len(trips)
+            pattern_indexes.append(index)
+
+        matched_trips = sum(1 for value in pattern_indexes if value >= 0)
+        total_trips = len(trips_in_order)
         coverage = matched_trips / total_trips if total_trips else 0.0
 
         if len(routes) < 20:
@@ -166,14 +177,8 @@ def main() -> None:
                 f"Official GTFS pattern coverage too low: {matched_trips}/{total_trips} ({coverage:.1%})"
             )
 
-        patterns = []
-        for pattern_id in sorted(pattern_details):
-            item = dict(pattern_details[pattern_id])
-            item["tripIds"] = sorted(pattern_to_trip_ids[pattern_id])
-            patterns.append(item)
-
         payload = {
-            "schemaVersion": 1,
+            "schemaVersion": 2,
             "cityId": "nyc",
             "sourceUrl": SOURCE_URL,
             "sourceSha256": source_sha256,
@@ -182,7 +187,8 @@ def main() -> None:
             "tripCount": total_trips,
             "matchedTripCount": matched_trips,
             "coverage": coverage,
-            "patterns": patterns,
+            "patterns": pattern_details,
+            "tripPatternIndexes": pattern_indexes,
         }
 
         with open(OUTPUT_PATH, "w", encoding="utf-8", newline="") as out:
@@ -195,7 +201,7 @@ def main() -> None:
             f"routes={len(routes)}",
             f"trips={total_trips}",
             f"matchedTrips={matched_trips}",
-            f"patterns={len(patterns)}",
+            f"patterns={len(pattern_details)}",
             f"coverage={coverage:.1%}",
             f"size={file_size} bytes",
         )
