@@ -1,13 +1,10 @@
 # Tickets recovered APK source language classification
-# The JADX-recovered app package originated from Kotlin sources.
-# Keep the recovered Java bytes unchanged while letting GitHub Linguist classify
-# the app-owned recovered source as Kotlin.
+# JADX recovered the app's Kotlin-origin classes as Java. Keep those recovered
+# files unchanged, but classify the app-owned source as Kotlin in GitHub Linguist.
 
-Original Code/v7.0.0/src/main/java/com/example/tickets/**/*.java linguist-language=Kotlin
-Original Code/v7.0.0/src/main/java/com/example/tickets/ui/**/*.java linguist-language=Kotlin
+# Exclude all recovered Java/dependency classes from language statistics first.
+Original Code/v7.0.0/src/main/java/**/*.java linguist-vendored=true
 
-# Exclude third-party/dependency source recovered from the APK from language stats.
-Original Code/v7.0.0/src/main/java/com/google/** linguist-vendored=true
-Original Code/v7.0.0/src/main/java/androidx/** linguist-vendored=true
-Original Code/v7.0.0/src/main/java/kotlin/** linguist-vendored=true
-Original Code/v7.0.0/src/main/java/kotlinx/** linguist-vendored=true
+# App-owned recovered source originated from the Kotlin Android project.
+Original Code/v7.0.0/src/main/java/com/example/tickets/**/*.java linguist-vendored=false linguist-language=Kotlin
+Original Code/v7.0.0/src/main/java/com/example/tickets/ui/**/*.java linguist-vendored=false linguist-language=Kotlin
