@@ -129,6 +129,22 @@ jobs:
                   app_name = apps[0].get("name", "")
 
           expected_repo_description = "票据App官方F-Droid仓库，所有该App出现在Github上的的版本都将出现在此"
+          expected_repo_url = "https://www.steve0309.dpdns.org/fdroid/repo"
+          expected_archive_url = "https://www.steve0309.dpdns.org/fdroid/archive"
+          expected_website_url = "https://www.steve0309.dpdns.org/"
+          current_repo_url = index_data.get("repo", {}).get("address", "")
+          current_website_url = ""
+          if index_path.exists():
+              apps = index_data.get("apps", [])
+              if apps:
+                  current_website_url = apps[0].get("webSite", "")
+          archive_data = {}
+          if archive_index_path.exists():
+              try:
+                  archive_data = json.loads(archive_index_path.read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError, TypeError):
+                  archive_data = {}
+          current_archive_url = archive_data.get("repo", {}).get("address", "")
           archive_ready = (
               archive_count == expected_archive_count
               and (expected_archive_count == 0 or archive_index_path.exists())
@@ -142,6 +158,9 @@ jobs:
               or repo_name != "票据"
               or repo_description != expected_repo_description
               or app_name != "票据"
+              or current_repo_url != expected_repo_url
+              or current_archive_url != expected_archive_url
+              or current_website_url != expected_website_url
           )
 
           print(f"Published releases with APK: {expected_count}")
@@ -154,6 +173,9 @@ jobs:
           print(f"Repo name correct: {repo_name == '票据'}")
           print(f"Repo description correct: {repo_description == expected_repo_description}")
           print(f"App name correct: {app_name == '票据'}")
+          print(f"Repo URL correct: {current_repo_url == expected_repo_url}")
+          print(f"Archive URL correct: {current_archive_url == expected_archive_url}")
+          print(f"App website URL correct: {current_website_url == expected_website_url}")
           print(f"F-Droid update needed: {update_needed}")
 
           with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
@@ -267,7 +289,7 @@ jobs:
 
             官方项目：
             https://github.com/SteveYuanlong9321/Tickets
-          WebSite: https://steveyuanlong9321.github.io/Tickets/
+          WebSite: https://www.steve0309.dpdns.org/
           SourceCode: https://github.com/SteveYuanlong9321/Tickets
           IssueTracker: https://github.com/SteveYuanlong9321/Tickets/issues
           AuthorName: SteveYuanlong9321
@@ -276,11 +298,11 @@ jobs:
           EOF
 
           cat > work/fdroid/config.yml <<'EOF'
-          repo_url: https://steveyuanlong9321.github.io/Tickets/fdroid/repo
+          repo_url: https://www.steve0309.dpdns.org/fdroid/repo
           repo_name: 票据
           repo_icon: tickets-app-icon.png
           repo_description: 票据App官方F-Droid仓库，所有该App出现在Github上的的版本都将出现在此
-          archive_url: https://steveyuanlong9321.github.io/Tickets/fdroid/archive
+          archive_url: https://www.steve0309.dpdns.org/fdroid/archive
           archive_name: Tickets 历史版本
           archive_description: Tickets 官方 F-Droid 历史版本仓库
           archive_icon: tickets-app-icon.png
