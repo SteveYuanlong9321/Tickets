@@ -129,6 +129,7 @@ jobs:
           archive_address = archive_index.get("repo", {}).get("address", "")
 
           update_needed = any([
+              os.environ.get("GITHUB_EVENT_NAME") in {"push", "workflow_dispatch"},
               not Path("fdroid/repo/index-v2.json").exists(),
               not Path("fdroid/archive/index-v2.json").exists(),
               expected_tickets != actual_tickets,
@@ -347,38 +348,32 @@ jobs:
             fi
           done
 
-          # Prefer localized titles in the F-Droid client, and convert the real launcher icon to PNG.
+          # Use the exact AppSpace website icon for F-Droid metadata; resize proportionally only.
           printf '%s\n' 'AppSpace' > work/fdroid/metadata/com.example.appspace/en-US/title.txt
           printf '%s\n' 'AppSpace' > work/fdroid/metadata/com.example.appspace/zh-CN/title.txt
           python3 - <<'PY'
           from pathlib import Path
           from PIL import Image
 
-          source = Path("work/appspace-source/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp")
+          source = Path("work/appspace-source/docs/assets/appspace-icon.webp")
           if not source.is_file():
-              raise SystemExit(f"AppSpace launcher icon not found: {source}")
+              raise SystemExit(f"AppSpace website icon not found: {source}")
           image = Image.open(source).convert("RGBA")
           width, height = image.size
           if width < 32 or height < 32:
-              raise SystemExit(f"AppSpace launcher icon is unexpectedly small: {image.size}")
+              raise SystemExit(f"AppSpace icon is unexpectedly small: {image.size}")
+          if width != height:
+              raise SystemExit(f"AppSpace icon must remain square; got {image.size}")
 
-          # The AppSpace launcher bitmap includes a dark safe-zone margin even
-          # where alpha is opaque, so alpha-only cropping leaves the visible icon
-          # noticeably smaller than Tickets. Trim 9.5% from each edge, centered,
-          # to match the actual rounded-square icon's visual size.
-          side = min(width, height)
-          margin = round(side * 0.105)
-          crop_side = side - 2 * margin
-          left = (width - side) // 2 + margin
-          top = (height - side) // 2 + margin
-          image = image.crop((left, top, left + crop_side, top + crop_side))
+          # Do not crop, trim, or stretch the supplied artwork.
+          # The source is square, so uniform resizing preserves its full contents and proportions.
           image = image.resize((512, 512), Image.Resampling.LANCZOS)
 
           for locale in ("en-US", "zh-CN"):
               target = Path(f"work/fdroid/metadata/com.example.appspace/{locale}/images/icon.png")
               target.parent.mkdir(parents=True, exist_ok=True)
               image.save(target, format="PNG", optimize=True)
-              print(f"Prepared normalized AppSpace {locale} icon: {target} ({target.stat().st_size} bytes)")
+              print(f"Prepared proportional AppSpace {locale} icon: {target} ({target.stat().st_size} bytes)")
           PY
 
           # Use the current GitHub profile avatar as the repository's own icon.
