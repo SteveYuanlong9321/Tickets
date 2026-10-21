@@ -4,6 +4,9 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/fdroid-repo.yml"
   schedule:
     - cron: "17 4 * * *"
 
