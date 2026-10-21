@@ -150,7 +150,7 @@ jobs:
           print(f"F-Droid update needed: {update_needed}")
 
           with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
-              env_file.write(f"FDROID_UPDATE_NEEDED={'true' if update_needed else 'false'}\\n")
+              env_file.write(f"FDROID_UPDATE_NEEDED={'true' if update_needed else 'false'}\n")
           PY
 
       - name: Install F-Droid server tools
