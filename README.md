@@ -97,7 +97,7 @@ GitHub Releases：
 https://github.com/SteveYuanlong9321/Tickets/releases
 
 隐私政策：  
-https://www.steve0309.dpdns.org/privacy.html
+https://steve0309.dpdns.org/privacy.html
 
 温馨提示：7.0.0版本的源代码因为新版本修复和开发时已经被新代码覆盖了，故此库里的7.0.0版本的源代码属于正式版Apk的提取代码，建议仅作为参考和学习，但也欢迎直接使用！
 ---
