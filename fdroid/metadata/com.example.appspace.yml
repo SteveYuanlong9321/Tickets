@@ -13,5 +13,6 @@ IssueTracker: https://github.com/SteveYuanlong9321/AppSpace/issues
 AuthorName: SteveYuanlong9321
 Categories:
   - System
+License: Apache-2.0
 AntiFeatures:
   - NonFreeNet
