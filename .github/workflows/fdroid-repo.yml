@@ -1,12 +1,9 @@
-name: Publish Tickets F-Droid Repo
+name: Publish Steve F-Droid Repo
 
 on:
   release:
     types: [published]
   workflow_dispatch:
-  push:
-    paths:
-      - ".github/workflows/fdroid-repo.yml"
   schedule:
     - cron: "17 4 * * *"
 
@@ -38,155 +35,129 @@ jobs:
           python3 - <<'PY'
           import json
           import os
+          import re
           import subprocess
           from pathlib import Path
+          from urllib.request import Request, urlopen
 
-          repo = os.environ["GITHUB_REPOSITORY"]
+          TICKETS_REPO = os.environ["GITHUB_REPOSITORY"]
+          APPSPACE_REPO = "SteveYuanlong9321/AppSpace"
+          REPO_NAME = "Steve的F-Droid仓库"
+          REPO_DESCRIPTION = "Steve 个人维护的 F-Droid 仓库，收录 AppSpace 与票据 App。"
+          REPO_URL = "https://www.steve0309.dpdns.org/fdroid/repo"
+          ARCHIVE_URL = "https://www.steve0309.dpdns.org/fdroid/archive"
+          TICKETS_SITE = "https://www.steve0309.dpdns.org/"
+          APPSPACE_SITE = "https://steveyuanlong9321.github.io/AppSpace/"
 
-          raw = subprocess.check_output(
-              [
-                  "gh",
-                  "api",
-                  "--paginate",
-                  "--slurp",
-                  f"repos/{repo}/releases?per_page=100",
-              ],
-              text=True,
-          )
-
-          pages = json.loads(raw)
-          releases = [release for page in pages for release in page]
-          releases = [
-              release
-              for release in releases
-              if not release.get("draft") and not release.get("prerelease")
-          ]
-
-          releases_with_apk = [
-              release
-              for release in releases
-              if any(
-                  asset.get("name", "").lower().endswith(".apk")
-                  for asset in release.get("assets", [])
+          def releases_for_tickets():
+              raw = subprocess.check_output(
+                  ["gh", "api", "--paginate", "--slurp",
+                   f"repos/{TICKETS_REPO}/releases?per_page=100"],
+                  text=True,
               )
-          ]
+              pages = json.loads(raw)
+              return [r for page in pages for r in page
+                      if not r.get("draft") and not r.get("prerelease")]
 
-          if not releases_with_apk:
-              raise SystemExit("No published GitHub release with an APK was found.")
+          def releases_for_appspace():
+              url = f"https://api.github.com/repos/{APPSPACE_REPO}/releases?per_page=100"
+              request = Request(url, headers={"User-Agent": "Steve-FDroid-Repo"})
+              with urlopen(request, timeout=30) as response:
+                  items = json.load(response)
+              return [r for r in items if not r.get("draft") and not r.get("prerelease")]
 
-          latest_tag = releases_with_apk[0]["tag_name"]
-          expected_count = len(releases_with_apk)
-          expected_main_count = min(3, expected_count)
-          expected_archive_count = max(expected_count - 3, 0)
+          def expected_files(releases, prefix=""):
+              names = set()
+              for release in releases:
+                  apk_assets = [a for a in release.get("assets", [])
+                                if a.get("name", "").lower().endswith(".apk")]
+                  if not apk_assets:
+                      continue
+                  if len(apk_assets) != 1:
+                      raise SystemExit(
+                          f"Expected exactly one APK in {release.get('tag_name')}, "
+                          f"found {len(apk_assets)}."
+                      )
+                  tag = re.sub(r"[^A-Za-z0-9._-]+", "_", release.get("tag_name", "")).strip("_")
+                  tag = tag or "release"
+                  names.add(f"{prefix}{tag}-{apk_assets[0]['name']}")
+              return names
 
-          index_path = Path("fdroid/repo/index-v2.json")
-          indexed_versions = []
-          index_data = {}
-          if index_path.exists():
+          def read_index(path):
               try:
-                  index_data = json.loads(index_path.read_text(encoding="utf-8"))
-                  package = index_data.get("packages", {}).get("com.example.tickets", {})
-                  indexed_versions = [
-                      version_info.get("manifest", {}).get("versionName")
-                      for version_info in package.get("versions", {}).values()
-                      if version_info.get("manifest", {}).get("versionName")
-                  ]
-              except (OSError, json.JSONDecodeError, AttributeError, TypeError):
-                  indexed_versions = []
+                  return json.loads(Path(path).read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError):
+                  return {}
 
-          archive_index_path = Path("fdroid/archive/index-v2.json")
-          archived_versions = []
-          if archive_index_path.exists():
-              try:
-                  archive_index_data = json.loads(
-                      archive_index_path.read_text(encoding="utf-8")
-                  )
-                  package = archive_index_data.get("packages", {}).get(
-                      "com.example.tickets", {}
-                  )
-                  archived_versions = [
-                      version_info.get("manifest", {}).get("versionName")
-                      for version_info in package.get("versions", {}).values()
-                      if version_info.get("manifest", {}).get("versionName")
-                  ]
-              except (OSError, json.JSONDecodeError, AttributeError, TypeError):
-                  archived_versions = []
+          def indexed_files(index, package_id):
+              package = index.get("packages", {}).get(package_id, {})
+              files = set()
+              for version in package.get("versions", {}).values():
+                  name = version.get("file", {}).get("name", "")
+                  if name:
+                      files.add(Path(name).name)
+              return files
 
-          latest_version = latest_tag[1:] if latest_tag.startswith("v") else latest_tag
-          current_count = len(indexed_versions)
-          archive_count = len(archived_versions)
-          latest_present = latest_version in indexed_versions
+          tickets_releases = releases_for_tickets()
+          appspace_releases = releases_for_appspace()
+          expected_tickets = expected_files(tickets_releases)
+          expected_appspace = expected_files(appspace_releases, prefix="appspace-")
 
-          repo_name = ""
-          repo_description = ""
-          app_name = ""
-          if index_path.exists():
-              repo_data = index_data.get("repo", {})
-              repo_name = repo_data.get("name", "")
-              repo_description = repo_data.get("description", "")
-              apps = index_data.get("apps", [])
-              if apps:
-                  app_name = apps[0].get("name", "")
-
-          expected_repo_description = "票据App官方F-Droid仓库，所有该App出现在Github上的的版本都将出现在此"
-          expected_repo_url = "https://www.steve0309.dpdns.org/fdroid/repo"
-          expected_archive_url = "https://www.steve0309.dpdns.org/fdroid/archive"
-          expected_website_url = "https://www.steve0309.dpdns.org/"
-          current_repo_url = index_data.get("repo", {}).get("address", "")
-          current_website_url = ""
-          if index_path.exists():
-              apps = index_data.get("apps", [])
-              if apps:
-                  current_website_url = apps[0].get("webSite", "")
-          archive_data = {}
-          if archive_index_path.exists():
-              try:
-                  archive_data = json.loads(archive_index_path.read_text(encoding="utf-8"))
-              except (OSError, json.JSONDecodeError, TypeError):
-                  archive_data = {}
-          current_archive_url = archive_data.get("repo", {}).get("address", "")
-          archive_ready = (
-              archive_count == expected_archive_count
-              and (expected_archive_count == 0 or archive_index_path.exists())
+          main_index = read_index("fdroid/repo/index-v2.json")
+          archive_index = read_index("fdroid/archive/index-v2.json")
+          actual_tickets = (
+              indexed_files(main_index, "com.example.tickets")
+              | indexed_files(archive_index, "com.example.tickets")
+          )
+          actual_appspace = (
+              indexed_files(main_index, "com.example.appspace")
+              | indexed_files(archive_index, "com.example.appspace")
           )
 
-          update_needed = (
-              current_count != expected_main_count
-              or not archive_ready
-              or not latest_present
-              or not index_path.exists()
-              or repo_name != "票据"
-              or repo_description != expected_repo_description
-              or app_name != "票据"
-              or current_repo_url != expected_repo_url
-              or current_archive_url != expected_archive_url
-              or current_website_url != expected_website_url
-          )
+          repo_info = main_index.get("repo", {})
+          repo_name = repo_info.get("name", {}).get("en-US", "")
+          repo_description = repo_info.get("description", {}).get("en-US", "")
+          repo_address = repo_info.get("address", "")
+          repo_icon = Path(repo_info.get("icon", {}).get("en-US", {}).get("name", "")).name
 
-          print(f"Published releases with APK: {expected_count}")
-          print(f"Expected main-repo versions: {expected_main_count}")
-          print(f"Indexed F-Droid versions: {current_count}")
-          print(f"Expected archive versions: {expected_archive_count}")
-          print(f"Indexed archive versions: {archive_count}")
-          print(f"Latest GitHub release: {latest_tag}")
-          print(f"Latest version present in F-Droid index: {latest_present}")
-          print(f"Repo name correct: {repo_name == '票据'}")
-          print(f"Repo description correct: {repo_description == expected_repo_description}")
-          print(f"App name correct: {app_name == '票据'}")
-          print(f"Repo URL correct: {current_repo_url == expected_repo_url}")
-          print(f"Archive URL correct: {current_archive_url == expected_archive_url}")
-          print(f"App website URL correct: {current_website_url == expected_website_url}")
+          ticket_meta = main_index.get("packages", {}).get("com.example.tickets", {}).get("metadata", {})
+          appspace_meta = main_index.get("packages", {}).get("com.example.appspace", {}).get("metadata", {})
+          archive_address = archive_index.get("repo", {}).get("address", "")
+
+          update_needed = any([
+              not Path("fdroid/repo/index-v2.json").exists(),
+              not Path("fdroid/archive/index-v2.json").exists(),
+              expected_tickets != actual_tickets,
+              expected_appspace != actual_appspace,
+              repo_name != REPO_NAME,
+              repo_description != REPO_DESCRIPTION,
+              repo_address != REPO_URL,
+              repo_icon != "steve-github-avatar.png",
+              archive_address != ARCHIVE_URL,
+              ticket_meta.get("name", {}).get("en-US") != "票据",
+              ticket_meta.get("webSite", "") != TICKETS_SITE,
+              appspace_meta.get("name", {}).get("en-US") != "AppSpace",
+              appspace_meta.get("webSite", "") != APPSPACE_SITE,
+              appspace_meta.get("sourceCode", "") != f"https://github.com/{APPSPACE_REPO}",
+          ])
+
+          print(f"Published Tickets releases with APK: {len(expected_tickets)}")
+          print(f"Indexed Tickets APK versions (main + archive): {len(actual_tickets)}")
+          print(f"Published AppSpace releases with APK: {len(expected_appspace)}")
+          print(f"Indexed AppSpace APK versions (main + archive): {len(actual_appspace)}")
+          print(f"Repository display name correct: {repo_name == REPO_NAME}")
+          print(f"Repository icon correct: {repo_icon == 'steve-github-avatar.png'}")
           print(f"F-Droid update needed: {update_needed}")
 
           with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env_file:
-              env_file.write(f"FDROID_UPDATE_NEEDED={'true' if update_needed else 'false'}\n")
+              env_file.write(f"FDROID_UPDATE_NEEDED={'true' if update_needed else 'false'}\\n")
           PY
 
       - name: Install F-Droid server tools
         if: env.FDROID_UPDATE_NEEDED == 'true'
         run: |
           sudo apt-get update
-          sudo apt-get install -y apksigner pipx
+          sudo apt-get install -y apksigner pipx python3-pil
           pipx install fdroidserver
           pipx ensurepath
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
@@ -270,7 +241,50 @@ jobs:
             total_apks=$((total_apks + 1))
           done
 
-          echo "Collected $total_apks APK(s) from published GitHub releases."
+          echo "Collected $total_apks Tickets APK(s) from published GitHub releases."
+
+          # AppSpace is hosted in a separate public source repository.
+          python3 - <<'PY'
+          import json
+          import re
+          import shutil
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+
+          api = "https://api.github.com/repos/SteveYuanlong9321/AppSpace/releases?per_page=100"
+          req = Request(api, headers={"User-Agent": "Steve-FDroid-Repo"})
+          with urlopen(req, timeout=30) as response:
+              releases = json.load(response)
+
+          published = [r for r in releases if not r.get("draft") and not r.get("prerelease")]
+          count = 0
+          target_root = Path("work/fdroid/repo")
+          target_root.mkdir(parents=True, exist_ok=True)
+          for release in published:
+              assets = [a for a in release.get("assets", [])
+                        if a.get("name", "").lower().endswith(".apk")]
+              if not assets:
+                  continue
+              if len(assets) != 1:
+                  raise SystemExit(
+                      f"Expected exactly one APK in AppSpace release {release.get('tag_name')}, "
+                      f"found {len(assets)}."
+                  )
+              tag = re.sub(r"[^A-Za-z0-9._-]+", "_", release.get("tag_name", "")).strip("_")
+              tag = tag or f"release-{count + 1}"
+              asset = assets[0]
+              target = target_root / f"appspace-{tag}-{Path(asset['name']).name}"
+              print(f"Collecting AppSpace APK: {release.get('tag_name')} -> {target.name}")
+              with urlopen(Request(asset["browser_download_url"],
+                                   headers={"User-Agent": "Steve-FDroid-Repo"}), timeout=120) as src:
+                  with target.open("wb") as dst:
+                      shutil.copyfileobj(src, dst)
+              count += 1
+
+          print(f"Collected {count} AppSpace APK(s) from published GitHub releases.")
+          if count == 0:
+              raise SystemExit("No published AppSpace release with an APK was found.")
+          PY
 
           mkdir -p work/fdroid/metadata/com.example.tickets/en-US/images
           cp assets/tickets-app-icon.png work/fdroid/metadata/com.example.tickets/en-US/images/icon.png
@@ -297,15 +311,52 @@ jobs:
             - Travel & Local
           EOF
 
+          cat > work/fdroid/metadata/com.example.appspace.yml <<'EOF'
+          Name: AppSpace
+          Summary: Search Android apps across multiple app catalogs
+          Description: |
+            AppSpace combines multiple third-party Android app catalogs in a single search interface.
+
+            It searches F-Droid, GitHub Releases, Huawei AppGallery, vivo App Store, and Uptodown.
+            Search and app details use third-party network services. APKs downloaded from other
+            sources have not been reviewed or built by F-Droid. Check the source and developer
+            before installing an APK.
+          WebSite: https://steveyuanlong9321.github.io/AppSpace/
+          SourceCode: https://github.com/SteveYuanlong9321/AppSpace
+          IssueTracker: https://github.com/SteveYuanlong9321/AppSpace/issues
+          AuthorName: SteveYuanlong9321
+          Categories:
+            - System
+          AntiFeatures:
+            - NonFreeNet
+          EOF
+
+          # Use the current GitHub profile avatar as the repository's own icon.
+          python3 - <<'PY'
+          from io import BytesIO
+          from urllib.request import Request, urlopen
+          from PIL import Image
+
+          request = Request(
+              "https://avatars.githubusercontent.com/u/275546397?v=4&size=256",
+              headers={"User-Agent": "Steve-FDroid-Repo"},
+          )
+          with urlopen(request, timeout=30) as response:
+              image_data = response.read()
+          image = Image.open(BytesIO(image_data)).convert("RGBA")
+          image.save("work/fdroid/steve-github-avatar.png", format="PNG")
+          print("Prepared repository icon from the GitHub profile avatar.")
+          PY
+
           cat > work/fdroid/config.yml <<'EOF'
           repo_url: https://www.steve0309.dpdns.org/fdroid/repo
-          repo_name: 票据
-          repo_icon: tickets-app-icon.png
-          repo_description: 票据App官方F-Droid仓库，所有该App出现在Github上的的版本都将出现在此
+          repo_name: Steve的F-Droid仓库
+          repo_icon: steve-github-avatar.png
+          repo_description: Steve 个人维护的 F-Droid 仓库，收录 AppSpace 与票据 App。
           archive_url: https://www.steve0309.dpdns.org/fdroid/archive
-          archive_name: Tickets 历史版本
-          archive_description: Tickets 官方 F-Droid 历史版本仓库
-          archive_icon: tickets-app-icon.png
+          archive_name: Steve的F-Droid仓库历史版本
+          archive_description: Steve个人F-Droid仓库中的历史版本归档
+          archive_icon: steve-github-avatar.png
           archive_older: 3
           keystore: keystore.p12
           repo_keyalias: repokey
