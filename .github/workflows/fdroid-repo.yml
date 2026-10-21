@@ -49,7 +49,7 @@ jobs:
           REPO_DESCRIPTION = "Steve 个人维护的 F-Droid 仓库，收录 AppSpace 与票据 App。"
           REPO_URL = "https://steve0309.dpdns.org/fdroid/repo"
           ARCHIVE_URL = "https://steve0309.dpdns.org/fdroid/archive"
-          TICKETS_SITE = "https://steve0309.dpdns.org/tickets.html"
+          TICKETS_SITE = "https://steve0309.dpdns.org/tickets/"
           APPSPACE_SITE = "https://steveyuanlong9321.github.io/AppSpace/"
 
           def releases_for_tickets():
@@ -140,7 +140,7 @@ jobs:
               ticket_meta.get("name", {}).get("en-US") != "票据",
               ticket_meta.get("webSite", "") != TICKETS_SITE,
               appspace_meta.get("name", {}).get("en-US") != "AppSpace",
-              appspace_meta.get("name", {}).get("zh-CN") != "应用空间",
+              appspace_meta.get("name", {}).get("zh-CN") != "AppSpace",
               appspace_meta.get("summary", {}).get("zh-CN") != "聚合搜索多个来源的 Android 应用",
               not appspace_meta.get("description", {}).get("zh-CN", "").startswith("AppSpace（应用空间）"),
               "zh-CN" not in appspace_meta.get("icon", {}),
@@ -311,7 +311,7 @@ jobs:
 
             官方项目：
             https://github.com/SteveYuanlong9321/Tickets
-          WebSite: https://steve0309.dpdns.org/tickets.html
+          WebSite: https://steve0309.dpdns.org/tickets/
           SourceCode: https://github.com/SteveYuanlong9321/Tickets
           IssueTracker: https://github.com/SteveYuanlong9321/Tickets/issues
           AuthorName: SteveYuanlong9321
@@ -347,7 +347,7 @@ jobs:
 
           # Prefer localized titles in the F-Droid client, and convert the real launcher icon to PNG.
           printf '%s\n' 'AppSpace' > work/fdroid/metadata/com.example.appspace/en-US/title.txt
-          printf '%s\n' '应用空间' > work/fdroid/metadata/com.example.appspace/zh-CN/title.txt
+          printf '%s\n' 'AppSpace' > work/fdroid/metadata/com.example.appspace/zh-CN/title.txt
           python3 - <<'PY'
           from pathlib import Path
           from PIL import Image
