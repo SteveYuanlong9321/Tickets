@@ -1,0 +1,17 @@
+Name: AppSpace
+Summary: Search Android apps across multiple app catalogs
+Description: |
+  AppSpace combines multiple third-party Android app catalogs in a single search interface.
+
+  It searches F-Droid, GitHub Releases, Huawei AppGallery, vivo App Store, and Uptodown.
+  Search and app details use third-party network services. APKs downloaded from other
+  sources have not been reviewed or built by F-Droid. Check the source and developer
+  before installing an APK.
+WebSite: https://steveyuanlong9321.github.io/AppSpace/
+SourceCode: https://github.com/SteveYuanlong9321/AppSpace
+IssueTracker: https://github.com/SteveYuanlong9321/AppSpace/issues
+AuthorName: SteveYuanlong9321
+Categories:
+  - System
+AntiFeatures:
+  - NonFreeNet
