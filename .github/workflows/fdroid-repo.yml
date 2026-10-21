@@ -330,9 +330,41 @@ jobs:
           AuthorName: SteveYuanlong9321
           Categories:
             - System
+          License: Apache-2.0
           AntiFeatures:
             - NonFreeNet
           EOF
+
+          # Import AppSpace's localized Fastlane metadata and provide its real app icon.
+          git clone --depth 1 https://github.com/SteveYuanlong9321/AppSpace.git work/appspace-source
+          for locale in en-US zh-CN; do
+            mkdir -p "work/fdroid/metadata/com.example.appspace/$locale/images"
+            if [ -d "work/appspace-source/fastlane/metadata/android/$locale" ]; then
+              cp -R "work/appspace-source/fastlane/metadata/android/$locale/." \
+                "work/fdroid/metadata/com.example.appspace/$locale/"
+            fi
+          done
+
+          # Prefer localized titles in the F-Droid client, and convert the real launcher icon to PNG.
+          printf '%s\n' 'AppSpace' > work/fdroid/metadata/com.example.appspace/en-US/title.txt
+          printf '%s\n' '应用空间' > work/fdroid/metadata/com.example.appspace/zh-CN/title.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+
+          source = Path("work/appspace-source/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp")
+          if not source.is_file():
+              raise SystemExit(f"AppSpace launcher icon not found: {source}")
+          image = Image.open(source).convert("RGBA")
+          if image.width != image.height:
+              raise SystemExit(f"Expected a square AppSpace icon, got {image.size}")
+          image = image.resize((512, 512), Image.Resampling.LANCZOS)
+          for locale in ("en-US", "zh-CN"):
+              target = Path(f"work/fdroid/metadata/com.example.appspace/{locale}/images/icon.png")
+              target.parent.mkdir(parents=True, exist_ok=True)
+              image.save(target, format="PNG", optimize=True)
+              print(f"Prepared AppSpace {locale} icon: {target} ({target.stat().st_size} bytes)")
+          PY
 
           # Use the current GitHub profile avatar as the repository's own icon.
           python3 - <<'PY'
