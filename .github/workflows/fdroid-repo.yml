@@ -140,6 +140,11 @@ jobs:
               ticket_meta.get("name", {}).get("en-US") != "票据",
               ticket_meta.get("webSite", "") != TICKETS_SITE,
               appspace_meta.get("name", {}).get("en-US") != "AppSpace",
+              appspace_meta.get("name", {}).get("zh-CN") != "应用空间",
+              appspace_meta.get("summary", {}).get("zh-CN") != "聚合搜索多个来源的 Android 应用",
+              not appspace_meta.get("description", {}).get("zh-CN", "").startswith("AppSpace（应用空间）"),
+              "zh-CN" not in appspace_meta.get("icon", {}),
+              "en-US" not in appspace_meta.get("icon", {}),
               appspace_meta.get("webSite", "") != APPSPACE_SITE,
               appspace_meta.get("sourceCode", "") != f"https://github.com/{APPSPACE_REPO}",
           ])
