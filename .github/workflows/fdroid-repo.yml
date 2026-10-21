@@ -125,6 +125,7 @@ jobs:
 
           ticket_meta = main_index.get("packages", {}).get("com.example.tickets", {}).get("metadata", {})
           appspace_meta = main_index.get("packages", {}).get("com.example.appspace", {}).get("metadata", {})
+          appspace_icon_hash = appspace_meta.get("icon", {}).get("en-US", {}).get("sha256", "")
           archive_address = archive_index.get("repo", {}).get("address", "")
 
           update_needed = any([
@@ -144,6 +145,7 @@ jobs:
               appspace_meta.get("summary", {}).get("zh-CN") != "聚合搜索多个来源的 Android 应用",
               not appspace_meta.get("description", {}).get("zh-CN", "").startswith("AppSpace（应用空间）"),
               "zh-CN" not in appspace_meta.get("icon", {}),
+              appspace_icon_hash == "5a88d0851ef0a1a3b95f35654b3285bfb9f0ed3420f1c1f553c36fc1f2a29efe",  # Rebuild the first pre-normalization icon once.
               "en-US" not in appspace_meta.get("icon", {}),
               appspace_meta.get("webSite", "") != APPSPACE_SITE,
               appspace_meta.get("sourceCode", "") != f"https://github.com/{APPSPACE_REPO}",
@@ -356,14 +358,31 @@ jobs:
           if not source.is_file():
               raise SystemExit(f"AppSpace launcher icon not found: {source}")
           image = Image.open(source).convert("RGBA")
-          if image.width != image.height:
-              raise SystemExit(f"Expected a square AppSpace icon, got {image.size}")
+          alpha_bbox = image.getchannel("A").getbbox()
+          if alpha_bbox is None:
+              raise SystemExit("AppSpace launcher icon is fully transparent.")
+
+          # Android launcher assets can contain transparent safe-zone padding.
+          # Trim that padding and re-center the visible icon on a square canvas,
+          # so it appears at a comparable visual size to the Tickets icon in F-Droid.
+          left, top, right, bottom = alpha_bbox
+          content_width = right - left
+          content_height = bottom - top
+          side = max(content_width, content_height)
+          padding = max(4, round(side * 0.035))
+          side += padding * 2
+          center_x = (left + right) / 2
+          center_y = (top + bottom) / 2
+          crop_left = round(center_x - side / 2)
+          crop_top = round(center_y - side / 2)
+          image = image.crop((crop_left, crop_top, crop_left + side, crop_top + side))
           image = image.resize((512, 512), Image.Resampling.LANCZOS)
+
           for locale in ("en-US", "zh-CN"):
               target = Path(f"work/fdroid/metadata/com.example.appspace/{locale}/images/icon.png")
               target.parent.mkdir(parents=True, exist_ok=True)
               image.save(target, format="PNG", optimize=True)
-              print(f"Prepared AppSpace {locale} icon: {target} ({target.stat().st_size} bytes)")
+              print(f"Prepared normalized AppSpace {locale} icon: {target} ({target.stat().st_size} bytes)")
           PY
 
           # Use the current GitHub profile avatar as the repository's own icon.
