@@ -55,6 +55,8 @@
     .project:hover { transform:translateY(-3px); border-color:rgba(196,167,255,.32); background:linear-gradient(155deg,rgba(196,167,255,.085),rgba(255,255,255,.02)); }
     .project-icon { display:block; width:80px; height:80px; padding:0; overflow:hidden; border:0; border-radius:0; background:transparent; flex:none; }
     .project-icon img { display:block; width:100%; height:100%; object-fit:contain; }
+    /* AppSpace source includes a few remaining safe-zone pixels; enlarge its visible artwork to match Tickets. */
+    .project-icon img.appspace-icon { transform:scale(1.08); }
     .project h3 { margin:20px 0 8px; font-size:21px; letter-spacing:-.04em; }
     .project h3 small { margin-left:5px; color:var(--muted); font-size:12px; font-weight:500; letter-spacing:0; }
     .project p { margin:0; color:var(--muted); font-size:13px; line-height:1.8; }
@@ -109,7 +111,7 @@
         </div>
         <div class="projects">
           <article class="project">
-            <div class="project-icon"><img src="./fdroid/repo/com.example.appspace/en-US/icon.png" alt="AppSpace 应用图标" width="80" height="80" loading="lazy"></div>
+            <div class="project-icon"><img class="appspace-icon" src="./fdroid/repo/com.example.appspace/en-US/icon.png?v=20261021-03" alt="AppSpace 应用图标" width="80" height="80" loading="lazy"></div>
             <h3>AppSpace <small>应用空间</small></h3>
             <p>聚合搜索多个来源的 Android 应用，让你在一个地方查找应用信息，并按需选择可用来源。</p>
             <div class="project-actions">
