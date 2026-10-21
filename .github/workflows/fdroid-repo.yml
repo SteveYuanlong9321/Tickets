@@ -145,7 +145,7 @@ jobs:
               appspace_meta.get("summary", {}).get("zh-CN") != "聚合搜索多个来源的 Android 应用",
               not appspace_meta.get("description", {}).get("zh-CN", "").startswith("AppSpace（应用空间）"),
               "zh-CN" not in appspace_meta.get("icon", {}),
-              appspace_icon_hash == "6bbe2b82a14f349b3df9bc9873276d389063575d1dbe99709ebbf44f301bbf43",  # Rebuild the first pre-normalization icon once.
+              appspace_icon_hash == "5d50d12fc0feee1b149546f461d2ec5412024f945015632a08ea466cc3a68fda",  # Rebuild the first pre-normalization icon once.
               "en-US" not in appspace_meta.get("icon", {}),
               appspace_meta.get("webSite", "") != APPSPACE_SITE,
               appspace_meta.get("sourceCode", "") != f"https://github.com/{APPSPACE_REPO}",
@@ -367,7 +367,7 @@ jobs:
           # noticeably smaller than Tickets. Trim 9.5% from each edge, centered,
           # to match the actual rounded-square icon's visual size.
           side = min(width, height)
-          margin = round(side * 0.095)
+          margin = round(side * 0.105)
           crop_side = side - 2 * margin
           left = (width - side) // 2 + margin
           top = (height - side) // 2 + margin
