@@ -87,8 +87,8 @@ OCR 和条码识别用于帮助用户从票据图片中提取内容；设备间�
 
 ## 官方资源
 
-官方网站：  
-https://www.steve0309.dpdns.org
+项目主页：  
+https://steve0309.dpdns.org/tickets.html
 
 GitHub：  
 https://github.com/SteveYuanlong9321/Tickets
