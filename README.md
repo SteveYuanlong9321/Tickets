@@ -1,7 +1,7 @@
 
 # Tickets App
 
-[![Keep Android Open](https://shields.io)](https://keepandroidopen.org)
+让安卓保持开放！访问：[![Keep Android Open](https://shields.io)](https://keepandroidopen.org)
 
 **Tickets** 是一款面向 Android 的本地电子票据管理应用，核心理念是：
 
